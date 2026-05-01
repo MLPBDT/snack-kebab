@@ -39,7 +39,12 @@ export default async function handler(req, res) {
   try {
     const data = await kv.get('snack-data');
     if (data) {
-      res.json(data);
+      // Retourne siteData si présent, sinon wrap l'ancien format
+      if (data.siteData) {
+        res.json(data.siteData);
+      } else {
+        res.json(data);
+      }
     } else {
       res.json({ menu: DEFAULT_MENU, compose: DEFAULT_COMPOSE });
     }
@@ -48,4 +53,3 @@ export default async function handler(req, res) {
     res.json({ menu: DEFAULT_MENU, compose: DEFAULT_COMPOSE });
   }
 }
-
