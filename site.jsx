@@ -410,9 +410,11 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             {visibleItems.map((it, idx) => (
               <article key={it.id} className="ks-card">
                 <div style={{ height: 160, position: 'relative', background: palette.bgDeep }}>
-                  {t.photos && t.photos.menu && t.photos.menu[activeCat]
-                    ? <img src={t.photos.menu[activeCat]} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                    : <KebabArt seed={idx + (it.id.charCodeAt(1) || 0)} palette={palette} />}
+                  {it.image
+                    ? <img src={it.image} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                    : t.photos && t.photos.menu && t.photos.menu[activeCat]
+                      ? <img src={t.photos.menu[activeCat]} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                      : <KebabArt seed={idx + (it.id.charCodeAt(1) || 0)} palette={palette} />}
                   {it.tag && (
                     <span className="ks-tag" style={{
                       position: 'absolute', top: 12, left: 12, background: palette.primary, color: palette.onPrimary,
