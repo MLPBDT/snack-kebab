@@ -168,6 +168,57 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
           <div class="field-row full">
             <div class="field"><label>Sous-titre accueil</label><textarea id="f-herosub" rows="2"></textarea></div>
           </div>
+          <div class="field-row">
+            <div class="field"><label>Badge flottant 1 🔥</label><input id="f-herobadge1" type="text" placeholder="Tout chaud, tout frais"/></div>
+            <div class="field"><label>Badge flottant 2 ⭐</label><input id="f-herobadge2" type="text" placeholder="4.8 · 320 avis"/></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">📊</div>
+          <div><h2>Stats accueil</h2><small>3 chiffres affichés sous les boutons</small></div>
+        </div>
+        <div class="card-body">
+          <div id="stats-grid" style="display:flex;flex-direction:column;gap:10px"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🍽️</div>
+          <div><h2>Titres des sections</h2><small>Textes des grandes sections du site</small></div>
+        </div>
+        <div class="card-body">
+          <div class="field-row">
+            <div class="field"><label>Titre section Menu</label><input id="f-menu-title" type="text" placeholder="Choisis ton kiff."/></div>
+            <div class="field"><label>Titre section Composer</label><input id="f-compose-title" type="text" placeholder="Compose ton kebab."/></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Sous-titre Composer</label><input id="f-compose-sub" type="text" placeholder="5 étapes, ton kebab parfait."/></div>
+            <div class="field"><label>Prix de base (Composer)</label><input id="f-compose-price" type="text" placeholder="7,50 €"/></div>
+          </div>
+          <div class="field-row full">
+            <div class="field"><label>Texte footer (sous le nom)</label><input id="f-footer-tagline" type="text" placeholder="Le vrai goût, depuis 2008. Une bouchée et tu comprends."/></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🏷️</div>
+          <div><h2>Noms des catégories menu</h2><small>Onglets affichés dans la carte</small></div>
+        </div>
+        <div class="card-body">
+          <div class="field-row">
+            <div class="field"><label>Catégorie 1</label><input id="f-cat-kebabs" type="text" placeholder="Kebabs"/></div>
+            <div class="field"><label>Catégorie 2</label><input id="f-cat-burgers" type="text" placeholder="Burgers"/></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Catégorie 3</label><input id="f-cat-tacos" type="text" placeholder="Tacos"/></div>
+            <div class="field"><label>Catégorie 4</label><input id="f-cat-sides" type="text" placeholder="Sides"/></div>
+          </div>
         </div>
       </div>
 
@@ -451,14 +502,20 @@ function fillForms() {
   const s = (id, v) => { const el = document.getElementById(id); if(el) el.value = v||''; };
   s('f-name', D.name); s('f-tagline', D.tagline);
   s('f-hero1', D.heroTitle1); s('f-hero2', D.heroTitle2);
-  s('f-herosub', D.heroSub); s('f-address', D.address);
-  s('f-phone', D.phone); s('f-about-title', D.aboutTitle);
-  s('f-about-text', D.aboutText);
+  s('f-herosub', D.heroSub);
+  s('f-herobadge1', D.heroBadge1||''); s('f-herobadge2', D.heroBadge2||'');
+  s('f-address', D.address); s('f-phone', D.phone);
+  s('f-about-title', D.aboutTitle); s('f-about-text', D.aboutText);
+  s('f-menu-title', D.menuTitle||''); s('f-compose-title', D.composeTitle||'');
+  s('f-compose-sub', D.composeSub||''); s('f-compose-price', D.composePrice||'');
+  s('f-footer-tagline', D.footerTagline||'');
+  s('f-cat-kebabs', (D.catLabels||{}).kebabs||'');
+  s('f-cat-burgers', (D.catLabels||{}).burgers||'');
+  s('f-cat-tacos', (D.catLabels||{}).tacos||'');
+  s('f-cat-sides', (D.catLabels||{}).sides||'');
   document.getElementById('tb-name').textContent = D.name||'';
   document.getElementById('tb-letter').textContent = (D.name||'S')[0].toUpperCase();
-  renderBadges();
-  renderMarquee();
-  renderSocial();
+  renderBadges(); renderStats(); renderMarquee(); renderSocial();
 }
 
 // MARQUEE
@@ -532,12 +589,39 @@ function readForms() {
   const g = id => (document.getElementById(id)||{}).value||'';
   D.name = g('f-name'); D.tagline = g('f-tagline');
   D.heroTitle1 = g('f-hero1'); D.heroTitle2 = g('f-hero2');
-  D.heroSub = g('f-herosub'); D.address = g('f-address');
-  D.phone = g('f-phone'); D.aboutTitle = g('f-about-title');
-  D.aboutText = g('f-about-text');
-  // badges sont mis à jour en temps réel via oninput
+  D.heroSub = g('f-herosub');
+  D.heroBadge1 = g('f-herobadge1'); D.heroBadge2 = g('f-herobadge2');
+  D.address = g('f-address'); D.phone = g('f-phone');
+  D.aboutTitle = g('f-about-title'); D.aboutText = g('f-about-text');
+  D.menuTitle = g('f-menu-title'); D.composeTitle = g('f-compose-title');
+  D.composeSub = g('f-compose-sub'); D.composePrice = g('f-compose-price');
+  D.footerTagline = g('f-footer-tagline');
+  D.catLabels = {
+    kebabs: g('f-cat-kebabs'), burgers: g('f-cat-burgers'),
+    tacos: g('f-cat-tacos'), sides: g('f-cat-sides'),
+  };
   document.getElementById('tb-name').textContent = D.name;
   document.getElementById('tb-letter').textContent = (D.name||'S')[0].toUpperCase();
+}
+
+// STATS
+function renderStats() {
+  if (!D.heroStats) D.heroStats = [
+    {v:'4.8', l:'Note moyenne', sub:'5 étoiles'},
+    {v:'12k+', l:'Kebabs servis', sub:'Cette année'},
+    {v:'30min', l:'Livraison', sub:'Garanti ou offert'},
+  ];
+  const grid = document.getElementById('stats-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  D.heroStats.forEach((st, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:grid;grid-template-columns:80px 1fr 1fr;gap:8px;align-items:center;margin-bottom:8px';
+    div.innerHTML = '<div><div class="mi-label">Valeur</div><input class="mi-input" value="' + (st.v||'') + '" placeholder="4.8" oninput="D.heroStats['+i+'].v=this.value"/></div>'
+      + '<div><div class="mi-label">Label</div><input class="mi-input" value="' + (st.l||'') + '" placeholder="Note moyenne" oninput="D.heroStats['+i+'].l=this.value"/></div>'
+      + '<div><div class="mi-label">Sous-texte</div><input class="mi-input" value="' + (st.sub||'') + '" placeholder="Cette année" oninput="D.heroStats['+i+'].sub=this.value"/></div>';
+    grid.appendChild(div);
+  });
 }
 
 // HORAIRES
