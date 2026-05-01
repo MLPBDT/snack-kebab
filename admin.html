@@ -43,7 +43,7 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f0
 .editor{display:flex;flex:1;overflow:hidden;gap:0}
 
 /* LEFT PANEL */
-.panel{width:340px;flex-shrink:0;background:#fff;display:flex;flex-direction:column;border-right:1px solid rgba(0,0,0,.1);overflow:hidden}
+.panel{width:380px;flex-shrink:0;background:#fff;display:flex;flex-direction:column;border-right:1px solid rgba(0,0,0,.1);overflow:hidden}
 .panel-tabs{display:flex;overflow-x:auto;border-bottom:1px solid rgba(0,0,0,.08);flex-shrink:0}
 .panel-tabs::-webkit-scrollbar{display:none}
 .ptab{padding:10px 14px;border:0;background:transparent;font:inherit;font-size:12px;font-weight:500;color:rgba(0,0,0,.45);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .15s}
@@ -229,15 +229,11 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f0
             <div class="f"><label>Titre</label><input id="f-menu-title" type="text" placeholder="Choisis ton kiff." oninput="liveUpdate()"/></div>
           </div>
 
-          <div class="sec-label">🏷️ Noms des catégories</div>
-          <div class="frow c2">
-            <div class="f"><label>Catégorie 1</label><input id="f-cat-kebabs" type="text" placeholder="Kebabs" oninput="liveUpdate()"/></div>
-            <div class="f"><label>Catégorie 2</label><input id="f-cat-burgers" type="text" placeholder="Burgers" oninput="liveUpdate()"/></div>
+          <div class="sec-label" style="display:flex;justify-content:space-between;align-items:center">
+            <span>🏷️ Catégories</span>
+            <button class="btn-add" style="width:auto;padding:4px 10px;margin:0;font-size:11px" onclick="addCategory()">+ Nouvelle catégorie</button>
           </div>
-          <div class="frow c2">
-            <div class="f"><label>Catégorie 3</label><input id="f-cat-tacos" type="text" placeholder="Tacos" oninput="liveUpdate()"/></div>
-            <div class="f"><label>Catégorie 4</label><input id="f-cat-sides" type="text" placeholder="Sides" oninput="liveUpdate()"/></div>
-          </div>
+          <div id="cat-manager"></div>
 
           <div class="sec-label">🥙 Plats</div>
           <div class="cat-tabs" id="cat-tabs"></div>
@@ -505,7 +501,7 @@ function switchTab(tab, btn) {
 
   // Render dynamic content for each tab
   if (tab === 'hero')     { renderStats(); renderMarquee(); }
-  if (tab === 'menu')     { renderMenuCats(); renderMenuItems(); }
+  if (tab === 'menu')     { renderCatManager(); renderMenuCats(); renderMenuItems(); }
   if (tab === 'apropos')  { renderBadges(); renderPhotos(); }
   if (tab === 'avis')     { renderReviews(); }
   if (tab === 'footer')   { renderHoraires(); renderSocial(); }
@@ -526,10 +522,6 @@ function fillForms() {
   s('f-compose-sub', D.composeSub||'');
   s('f-compose-price', D.composePrice||'');
   s('f-footer-tagline', D.footerTagline||'');
-  s('f-cat-kebabs', (D.catLabels||{}).kebabs||'');
-  s('f-cat-burgers', (D.catLabels||{}).burgers||'');
-  s('f-cat-tacos', (D.catLabels||{}).tacos||'');
-  s('f-cat-sides', (D.catLabels||{}).sides||'');
   s('f-place-id', D.googlePlaceId||'');
   s('f-reviews-title', D.reviewsTitle||'');
   if (D.photos && D.photos.hero) s('hero-url', D.photos.hero);
@@ -551,10 +543,7 @@ function readForms() {
   D.composeSub = g('f-compose-sub');
   D.composePrice = g('f-compose-price');
   D.footerTagline = g('f-footer-tagline');
-  D.catLabels = {
-    kebabs: g('f-cat-kebabs'), burgers: g('f-cat-burgers'),
-    tacos: g('f-cat-tacos'), sides: g('f-cat-sides'),
-  };
+  // catLabels gérés en temps réel via setCatLabel()
   document.getElementById('tb-name').textContent = D.name;
   document.getElementById('tb-letter').textContent = (D.name||'S')[0].toUpperCase();
 }
@@ -562,11 +551,57 @@ function readForms() {
 function renderAll() {
   renderStats(); renderMarquee(); renderBadges();
   renderHoraires(); renderSocial();
-  renderMenuCats(); renderMenuItems();
+  renderCatManager(); renderMenuCats(); renderMenuItems();
   renderReviews(); renderPhotos();
 }
 
-// ── STATS ──
+// ── CATEGORY MANAGER ──
+function renderCatManager() {
+  const el = document.getElementById('cat-manager');
+  if (!el) return;
+  el.innerHTML = '';
+  Object.keys(D.menu).forEach(cat => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:6px;align-items:center;margin-bottom:6px';
+    const label = (D.catLabels||{})[cat] || cat;
+    row.innerHTML = '<input class="mi-input" style="flex:1" value="'+esc(label)+'" placeholder="Nom affiché…" oninput="setCatLabel(\''+cat+'\',this.value)"/>'
+      +'<span style="font-size:10px;color:rgba(0,0,0,.35);min-width:40px">'+((D.menu[cat]||[]).length)+' plat(s)</span>'
+      +(Object.keys(D.menu).length > 1
+        ? '<button class="btn-del" onclick="deleteCategory(\''+cat+'\')" title="Supprimer">✕</button>'
+        : '<div style="width:26px"></div>');
+    el.appendChild(row);
+  });
+}
+
+function setCatLabel(cat, label) {
+  if (!D.catLabels) D.catLabels = {};
+  D.catLabels[cat] = label;
+  liveUpdate();
+}
+
+function addCategory() {
+  const key = 'cat' + Date.now().toString(36).slice(-4);
+  D.menu[key] = [];
+  if (!D.catLabels) D.catLabels = {};
+  D.catLabels[key] = 'Nouvelle catégorie';
+  activeCat = key;
+  renderCatManager();
+  renderMenuCats();
+  renderMenuItems();
+  liveUpdate();
+}
+
+function deleteCategory(cat) {
+  if (Object.keys(D.menu).length <= 1) { showToast('❌ Il faut au moins une catégorie', true); return; }
+  if (!confirm('Supprimer la catégorie "'+((D.catLabels||{})[cat]||cat)+'" et tous ses plats ?')) return;
+  delete D.menu[cat];
+  if (D.catLabels) delete D.catLabels[cat];
+  activeCat = Object.keys(D.menu)[0];
+  renderCatManager();
+  renderMenuCats();
+  renderMenuItems();
+  liveUpdate();
+}
 function renderStats() {
   if (!D.heroStats) D.heroStats = [{v:'4.8',l:'Note moyenne',sub:'5 étoiles'},{v:'12k+',l:'Kebabs servis',sub:'Cette année'},{v:'30min',l:'Livraison',sub:'Garanti ou offert'}];
   const grid = document.getElementById('stats-grid');
@@ -656,13 +691,16 @@ function renderMenuCats() {
   const tabs = document.getElementById('cat-tabs');
   if (!tabs) return;
   tabs.innerHTML = '';
-  Object.keys(CAT_LABELS).forEach(cat => {
+  Object.keys(D.menu).forEach(cat => {
+    const label = (D.catLabels||{})[cat] || CAT_LABELS[cat] || cat;
     const btn = document.createElement('button');
     btn.className = 'cat-tab'+(cat===activeCat?' active':'');
-    btn.innerHTML = CAT_LABELS[cat]+'<span class="cat-count">· '+((D.menu[cat]||[]).length)+'</span>';
+    btn.innerHTML = label+'<span class="cat-count">· '+((D.menu[cat]||[]).length)+'</span>';
     btn.onclick = () => { activeCat=cat; renderMenuCats(); renderMenuItems(); };
     tabs.appendChild(btn);
   });
+  // S'assurer que activeCat existe encore
+  if (!D.menu[activeCat]) activeCat = Object.keys(D.menu)[0];
 }
 
 function renderMenuItems() {
@@ -671,27 +709,29 @@ function renderMenuItems() {
   c.innerHTML = '';
   (D.menu[activeCat]||[]).forEach((item, idx) => {
     const div = document.createElement('div');
-    div.className = 'menu-item';
-    div.innerHTML = '<div style="display:grid;grid-template-columns:80px 1fr;gap:10px;align-items:start">'
-      +'<div>'
-      +'<div class="mi-label">Photo</div>'
-      +'<div id="item-img-'+activeCat+'-'+idx+'" style="width:100%;aspect-ratio:1;border-radius:7px;border:2px dashed rgba(0,0,0,.12);background:#f5f5f5;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px;position:relative;cursor:pointer" onclick="document.getElementById(\'item-file-'+activeCat+'-'+idx+'\').click()">'
-      +(item.image?'<img src="'+esc(item.image)+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>':'🖼️')
-      +'</div>'
-      +'<input type="url" class="mi-input" style="margin-top:4px;font-size:10px" placeholder="URL photo…" value="'+esc(item.image||'')+'" oninput="setItemPhoto(\''+activeCat+'\','+idx+',this.value)"/>'
-      +'<label class="upload-btn" style="margin-top:4px;font-size:10px;width:100%;justify-content:center">📁<input type="file" id="item-file-'+activeCat+'-'+idx+'" accept="image/*" style="display:none" onchange="uploadItemPhoto(\''+activeCat+'\','+idx+',this)"/></label>'
-      +'</div>'
-      +'<div>'
-      +'<div style="display:grid;grid-template-columns:1fr 60px 90px 24px;gap:6px;margin-bottom:6px">'
-      +'<div><div class="mi-label">Nom</div><input class="mi-input" value="'+esc(item.name)+'" oninput="D.menu[\''+activeCat+'\']['+idx+'].name=this.value;liveUpdate()"/></div>'
-      +'<div><div class="mi-label">Prix €</div><input class="mi-input" type="number" step="0.5" min="0" value="'+item.price+'" oninput="D.menu[\''+activeCat+'\']['+idx+'].price=parseFloat(this.value)||0;liveUpdate()"/></div>'
-      +'<div><div class="mi-label">Étiquette</div><input class="mi-input" value="'+esc(item.tag||'')+'" placeholder="Épicé…" oninput="D.menu[\''+activeCat+'\']['+idx+'].tag=this.value;liveUpdate()"/></div>'
-      +'<button class="btn-del-item" onclick="deleteItem(\''+activeCat+'\','+idx+')">🗑</button>'
-      +'</div>'
-      +'<div class="mi-label">Description</div>'
-      +'<textarea class="mi-input" rows="2" oninput="D.menu[\''+activeCat+'\']['+idx+'].desc=this.value;liveUpdate()">'+esc(item.desc)+'</textarea>'
-      +'</div>'
-      +'</div>';
+     div.className = 'menu-item';
+     div.innerHTML = '<div style="display:flex;gap:8px;align-items:flex-start">'
+       +'<div style="flex-shrink:0;width:70px">'
+       +'<div class="mi-label">Photo</div>'
+       +'<div id="item-img-'+activeCat+'-'+idx+'" style="width:70px;height:70px;border-radius:7px;border:2px dashed rgba(0,0,0,.12);background:#f5f5f5;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:16px;position:relative;cursor:pointer" onclick="document.getElementById(\'item-file-'+activeCat+'-'+idx+'\').click()">'
+       +(item.image?'<img src="'+esc(item.image)+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>':'🖼️')
+       +'</div>'
+       +'<label class="upload-btn" style="margin-top:3px;font-size:9px;width:100%;justify-content:center;padding:3px">📁<input type="file" id="item-file-'+activeCat+'-'+idx+'" accept="image/*" style="display:none" onchange="uploadItemPhoto(\''+activeCat+'\','+idx+',this)"/></label>'
+       +'<input type="url" class="mi-input" style="margin-top:3px;font-size:9px;padding:4px 5px" placeholder="URL…" value="'+esc(item.image||'')+'" oninput="setItemPhoto(\''+activeCat+'\','+idx+',this.value)"/>'
+       +'</div>'
+       +'<div style="flex:1;min-width:0">'
+       +'<div style="display:grid;grid-template-columns:1fr 52px;gap:5px;margin-bottom:5px">'
+       +'<div><div class="mi-label">Nom</div><input class="mi-input" value="'+esc(item.name)+'" oninput="D.menu[\''+activeCat+'\']['+idx+'].name=this.value;liveUpdate()"/></div>'
+       +'<div><div class="mi-label">Prix €</div><input class="mi-input" type="number" step="0.5" min="0" value="'+item.price+'" oninput="D.menu[\''+activeCat+'\']['+idx+'].price=parseFloat(this.value)||0;liveUpdate()"/></div>'
+       +'</div>'
+       +'<div style="display:flex;gap:5px;align-items:flex-end;margin-bottom:5px">'
+       +'<div style="flex:1"><div class="mi-label">Étiquette</div><input class="mi-input" value="'+esc(item.tag||'')+'" placeholder="Épicé, Végé…" oninput="D.menu[\''+activeCat+'\']['+idx+'].tag=this.value;liveUpdate()"/></div>'
+       +'<button class="btn-del-item" onclick="deleteItem(\''+activeCat+'\','+idx+')">🗑</button>'
+       +'</div>'
+       +'<div class="mi-label">Description</div>'
+       +'<textarea class="mi-input" rows="2" oninput="D.menu[\''+activeCat+'\']['+idx+'].desc=this.value;liveUpdate()">'+esc(item.desc)+'</textarea>'
+       +'</div>'
+       +'</div>';
     c.appendChild(div);
   });
 }
