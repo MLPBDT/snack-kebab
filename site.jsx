@@ -329,7 +329,8 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
               <button className="ks-btn ks-btn-primary" style={{ fontSize: isMobile ? 15 : 16, padding: isMobile ? '14px 22px' : '18px 28px' }}>
                 Commander · 30 min {I.arrow}
               </button>
-              <button className="ks-btn ks-btn-ghost" style={{ fontSize: isMobile ? 15 : 16, padding: isMobile ? '14px 22px' : '18px 28px' }}>
+              <button className="ks-btn ks-btn-ghost" style={{ fontSize: isMobile ? 15 : 16, padding: isMobile ? '14px 22px' : '18px 28px' }}
+                onClick={() => document.getElementById('Menu') && document.getElementById('Menu').scrollIntoView({ behavior: 'smooth' })}>
                 Voir le menu
               </button>
             </div>
@@ -395,7 +396,10 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
         <div className="ks-marquee">
           {[...Array(2)].map((_, k) => (
             <React.Fragment key={k}>
-              {['🔥 Menu midi à 9,90€', '★ Livraison 30 min ou offerte', '🌶️ Nouveau · Tacos XXL', '🥙 Halal · 100% maison', '🚀 -10% sur ta 1re commande'].map((s, i) => (
+              {(t.marqueeItems && t.marqueeItems.length > 0
+                ? t.marqueeItems
+                : ['🔥 Menu midi à 9,90€', '★ Livraison 30 min ou offerte', '🌶️ Nouveau · Tacos XXL', '🥙 Halal · 100% maison', '🚀 -10% sur ta 1re commande']
+              ).map((s, i) => (
                 <div key={`${k}-${i}`} className="ks-display" style={{ fontSize: 22, whiteSpace: 'nowrap' }}>{s}</div>
               ))}
             </React.Fragment>
@@ -661,8 +665,14 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
               {t.tagline || 'Le vrai goût, depuis 2008'}. Une bouchée et tu comprends.
             </p>
             <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
-              {['IG', 'TT', 'FB'].map(s => (
-                <div key={s} style={{ width: 36, height: 36, borderRadius: 999, border: `1px solid ${palette.bg}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, opacity: 0.8 }}>{s}</div>
+              {(t.socialLinks && t.socialLinks.length > 0
+                ? t.socialLinks
+                : [{ label: 'IG', url: '' }, { label: 'TT', url: '' }, { label: 'FB', url: '' }]
+              ).filter(s => s.label).map((s, i) => (
+                s.url
+                  ? <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
+                      style={{ width: 36, height: 36, borderRadius: 999, border: `1px solid ${palette.bg}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, opacity: 0.8, color: palette.bg, textDecoration: 'none' }}>{s.label}</a>
+                  : <div key={i} style={{ width: 36, height: 36, borderRadius: 999, border: `1px solid ${palette.bg}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, opacity: 0.8 }}>{s.label}</div>
               ))}
             </div>
           </div>
