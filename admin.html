@@ -338,7 +338,7 @@ let adminPassword = '';
 let activeCat = 'kebabs';
 let currentDevice = 'desktop';
 let liveUpdateTimer = null;
-const CAT_LABELS = { kebabs:'🥙 Kebabs', burgers:'🍔 Burgers', tacos:'🌮 Tacos', sides:'🍟 Sides' };
+const CAT_LABELS = { kebabs:'🥙 Kebabs', burgers:'🍔 Burgers', tacos:'🌮 Tacos', sides:'🍟 Sides', boissons:'🥤 Boissons' };
 
 let D = {
   name:'Snack Bosphore', tagline:'Le vrai goût, depuis 2008',
@@ -367,7 +367,7 @@ let D = {
   menuTitle:'Choisis ton kiff.',
   composeTitle:'Compose ton kebab.', composeSub:'', composePrice:'7,50 €',
   footerTagline:'',
-  catLabels:{ kebabs:'', burgers:'', tacos:'', sides:'' },
+  catLabels:{ kebabs:'🥙 Kebabs', burgers:'🍔 Burgers', tacos:'🌮 Tacos', sides:'🍟 Sides', boissons:'🥤 Boissons' },
   googlePlaceId:'', reviewsTitle:'4.8 sur 320 avis.',
   marqueeItems:['🔥 Menu midi à 9,90€','★ Livraison 30 min ou offerte','🌶️ Nouveau · Tacos XXL','🥙 Halal · 100% maison','🚀 -10% sur ta 1re commande'],
   socialLinks:[{label:'IG',url:''},{label:'TT',url:''},{label:'FB',url:''}],
@@ -399,9 +399,15 @@ let D = {
       {id:'s3',name:'Onion rings', desc:'6 pièces, sauce barbecue',price:4,tag:''},
       {id:'s4',name:'Mozza sticks x4', desc:'Bâtonnets de mozza panés, sauce tomate',price:5,tag:''},
     ],
+    boissons:[
+      {id:'bo1',name:'Coca-Cola', desc:'33cl',price:2.5,tag:''},
+      {id:'bo2',name:'Orangina', desc:'33cl',price:2.5,tag:''},
+      {id:'bo3',name:'Eau minérale', desc:'50cl',price:1.5,tag:''},
+      {id:'bo4',name:'Jus d'orange', desc:'Pressé maison',price:3,tag:'Maison'},
+    ],
   },
   compose:[],
-  photos:{ hero:'', about:['','',''], menu:{kebabs:'',burgers:'',tacos:'',sides:''} }
+  photos:{ hero:'', about:['','',''], menu:{kebabs:'',burgers:'',tacos:'',sides:'',boissons:''} }
 };
 
 // ── LOGIN ──
