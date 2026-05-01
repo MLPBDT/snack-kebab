@@ -557,19 +557,19 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: '1fr 1fr', gap: 12,
             height: isMobile ? 320 : 460,
           }}>
-            <div style={{ gridRow: '1 / 3', borderRadius: radius.lg, overflow: 'hidden', background: palette.primary }}>
+            <div style={{ gridRow: '1 / 3', borderRadius: radius.lg, overflow: 'hidden', background: palette.primary, position: 'relative' }}>
               {t.photos && t.photos.about && t.photos.about[0]
-                ? <img src={t.photos.about[0]} alt="about" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                ? <img src={t.photos.about[0]} alt="about" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
                 : <KebabArt seed={1} palette={palette} />}
             </div>
-            <div style={{ borderRadius: radius.lg, overflow: 'hidden', background: palette.accent }}>
+            <div style={{ borderRadius: radius.lg, overflow: 'hidden', background: palette.accent, position: 'relative' }}>
               {t.photos && t.photos.about && t.photos.about[1]
-                ? <img src={t.photos.about[1]} alt="about" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                ? <img src={t.photos.about[1]} alt="about" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
                 : <KebabArt seed={2} palette={palette} />}
             </div>
-            <div style={{ borderRadius: radius.lg, overflow: 'hidden', background: palette.bgDeep }}>
+            <div style={{ borderRadius: radius.lg, overflow: 'hidden', background: palette.bgDeep, position: 'relative' }}>
               {t.photos && t.photos.about && t.photos.about[2]
-                ? <img src={t.photos.about[2]} alt="about" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                ? <img src={t.photos.about[2]} alt="about" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
                 : <KebabArt seed={3} palette={palette} />}
             </div>
           </div>
