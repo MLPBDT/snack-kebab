@@ -66,14 +66,18 @@ async function loadAndMount() {
     check();
   });
 
-  // Charger le menu depuis l'API
+  // Charger les données depuis l'API
   try {
     const res = await fetch('/api/get-menu');
     const data = await res.json();
-    if (data.menu) SITE_TWEAKS.menu = data.menu;
-    if (data.compose) SITE_TWEAKS.compose = data.compose;
+    if (data.siteData) {
+      Object.assign(SITE_TWEAKS, data.siteData);
+    } else {
+      if (data.menu) SITE_TWEAKS.menu = data.menu;
+      if (data.compose) SITE_TWEAKS.compose = data.compose;
+    }
   } catch (e) {
-    console.warn('Menu API indisponible, utilisation du menu par défaut');
+    console.warn('API indisponible, données par défaut utilisées');
   }
 
   // Cacher le loader
@@ -89,4 +93,3 @@ loadAndMount();
 </script>
 </body>
 </html>
-
