@@ -539,13 +539,13 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
               {t.aboutText || 'Depuis 2008, on broche notre viande chaque matin, on pétrit notre pain à la main et on fait nos sauces sur place. Pas de surgelé, pas de raccourci. Juste le vrai goût du kebab, comme à la maison.'}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 28 }}>
-              {[
+              {(t.aboutBadges || [
                 { k: 'Halal', v: 'Certifié AVS' },
                 { k: 'Maison', v: 'Pain & sauces' },
                 { k: 'Frais', v: 'Livré chaque matin' },
                 { k: '0 surgelé', v: 'Tout cuisiné minute' },
-              ].map(b => (
-                <div key={b.k} style={{ padding: 16, background: palette.surface, borderRadius: radius.md, border: `1px solid ${palette.text}10` }}>
+              ]).map((b, i) => (
+                <div key={i} style={{ padding: 16, background: palette.surface, borderRadius: radius.md, border: `1px solid ${palette.text}10` }}>
                   <div className="ks-display" style={{ fontSize: 22, color: palette.primary }}>{b.k}</div>
                   <div style={{ fontSize: 13, color: palette.muted, marginTop: 4 }}>{b.v}</div>
                 </div>
