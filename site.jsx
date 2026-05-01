@@ -26,6 +26,12 @@ const DEFAULT_MENU = {
     { id: 's3', name: 'Onion rings',         desc: '6 pièces, sauce barbecue',                                             price: 4,    tag: '' },
     { id: 's4', name: 'Mozza sticks x4',     desc: 'Bâtonnets de mozza panés, sauce tomate',                              price: 5,    tag: '' },
   ],
+  boissons: [
+    { id: 'bo1', name: 'Coca-Cola',          desc: '33cl',                                                                 price: 2.5,  tag: '' },
+    { id: 'bo2', name: 'Orangina',           desc: '33cl',                                                                 price: 2.5,  tag: '' },
+    { id: 'bo3', name: 'Eau minérale',       desc: '50cl',                                                                 price: 1.5,  tag: '' },
+    { id: 'bo4', name: "Jus d'orange",       desc: 'Pressé maison',                                                        price: 3,    tag: 'Maison' },
+  ],
 };
 
 const DEFAULT_COMPOSE = [
@@ -442,7 +448,7 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
           {/* Category tabs */}
           <div style={{ display: 'flex', gap: 8, marginBottom: 28, flexWrap: 'wrap', borderBottom: `1px solid ${palette.text}15`, paddingBottom: 16 }}>
             {Object.keys(MENU).map((k) => {
-              const defaultLabels = { kebabs: 'Kebabs', burgers: 'Burgers', tacos: 'Tacos', sides: 'Sides' };
+              const defaultLabels = { kebabs: '🥙 Kebabs', burgers: '🍔 Burgers', tacos: '🌮 Tacos', sides: '🍟 Sides', boissons: '🥤 Boissons' };
               const l = (t.catLabels && t.catLabels[k]) || defaultLabels[k] || (k[0].toUpperCase() + k.slice(1));
               return (
               <button key={k} onClick={() => setActiveCat(k)} className="ks-chip"
