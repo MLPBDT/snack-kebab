@@ -330,7 +330,9 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             }} />
             <style>{`@keyframes ks-spin { to { transform: rotate(360deg); } }`}</style>
             <div style={{ width: '70%', aspectRatio: '1', borderRadius: radius.xl, overflow: 'hidden', boxShadow: `0 30px 80px ${palette.text}30`, transform: 'rotate(-3deg)' }}>
-              <KebabArt seed={0} palette={palette} />
+              {t.photos && t.photos.hero
+                ? <img src={t.photos.hero} alt="hero" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                : <KebabArt seed={0} palette={palette} />}
             </div>
             {/* Floating tags */}
             <div style={{
@@ -408,7 +410,9 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             {visibleItems.map((it, idx) => (
               <article key={it.id} className="ks-card">
                 <div style={{ height: 160, position: 'relative', background: palette.bgDeep }}>
-                  <KebabArt seed={idx + (it.id.charCodeAt(1) || 0)} palette={palette} />
+                  {t.photos && t.photos.menu && t.photos.menu[activeCat]
+                    ? <img src={t.photos.menu[activeCat]} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                    : <KebabArt seed={idx + (it.id.charCodeAt(1) || 0)} palette={palette} />}
                   {it.tag && (
                     <span className="ks-tag" style={{
                       position: 'absolute', top: 12, left: 12, background: palette.primary, color: palette.onPrimary,
@@ -552,13 +556,19 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             height: isMobile ? 320 : 460,
           }}>
             <div style={{ gridRow: '1 / 3', borderRadius: radius.lg, overflow: 'hidden', background: palette.primary }}>
-              <KebabArt seed={1} palette={palette} />
+              {t.photos && t.photos.about && t.photos.about[0]
+                ? <img src={t.photos.about[0]} alt="about" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                : <KebabArt seed={1} palette={palette} />}
             </div>
             <div style={{ borderRadius: radius.lg, overflow: 'hidden', background: palette.accent }}>
-              <KebabArt seed={2} palette={palette} />
+              {t.photos && t.photos.about && t.photos.about[1]
+                ? <img src={t.photos.about[1]} alt="about" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                : <KebabArt seed={2} palette={palette} />}
             </div>
             <div style={{ borderRadius: radius.lg, overflow: 'hidden', background: palette.bgDeep }}>
-              <KebabArt seed={3} palette={palette} />
+              {t.photos && t.photos.about && t.photos.about[2]
+                ? <img src={t.photos.about[2]} alt="about" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                : <KebabArt seed={3} palette={palette} />}
             </div>
           </div>
         </div>
