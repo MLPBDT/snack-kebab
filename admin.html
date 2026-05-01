@@ -1,1 +1,233 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Espace Gérant — Snack Bosphore</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fafaf7; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    position: fixed; inset: 0; background: #0E0E0E;
+    display: flex; align-items: center; justify-content: center; z-index: 9999;
+  }
+  .login-box {
+    background: #1a1a1a; border-radius: 16px; padding: 40px;
+    width: 360px; text-align: center; border: 1px solid rgba(255,255,255,0.08);
+  }
+  .login-box h1 { color: #fff; font-size: 22px; margin: 0 0 6px; }
+  .login-box p { color: rgba(255,255,255,0.45); font-size: 13px; margin: 0 0 28px; }
+  .login-box input {
+    width: 100%; padding: 12px 16px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06);
+    color: #fff; font: inherit; font-size: 15px; outline: none; margin-bottom: 12px;
+  }
+  .login-box input:focus { border-color: #E63946; }
+  .login-box button {
+    width: 100%; padding: 13px; border-radius: 10px; border: 0;
+    background: #E63946; color: #fff; font: inherit; font-size: 15px;
+    font-weight: 600; cursor: pointer;
+  }
+  .login-box button:hover { background: #c8313e; }
+  .login-error { color: #E63946; font-size: 13px; margin-top: 10px; display: none; }
+
+  /* ── TOPBAR ── */
+  #app { display: none; }
+  .topbar {
+    background: #fff; border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .topbar-logo {
+    width: 36px; height: 36px; background: #E63946; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 900; font-size: 18px;
+  }
+  .topbar h1 { font-size: 17px; font-weight: 700; margin: 0; }
+  .topbar p { font-size: 12px; color: rgba(0,0,0,0.45); margin: 2px 0 0; }
+
+  .save-btn {
+    padding: 10px 20px; background: #1a1a1a; color: #fff;
+    border: 0; border-radius: 8px; font: inherit; font-weight: 600;
+    font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+    transition: background 0.15s;
+  }
+  .save-btn:hover { background: #333; }
+  .save-btn:disabled { background: #999; cursor: not-allowed; }
+  .save-btn.saving { background: #2e7d32; }
+  .save-btn.saved { background: #388e3c; }
+
+  /* ── CONTENT ── */
+  .content { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+  .preview-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f5f5f5; border-radius: 8px; padding: 10px 16px;
+    font-size: 13px; color: #555; text-decoration: none; margin-bottom: 28px;
+    border: 1px solid rgba(0,0,0,0.08); transition: background 0.15s;
+  }
+  .preview-link:hover { background: #ebebeb; }
+
+  /* ── ADMIN PANEL ── */
+  #admin-root { min-height: 400px; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div style="font-size:36px;margin-bottom:16px">🥙</div>
+    <h1>Espace Gérant</h1>
+    <p>Snack Bosphore · Administration</p>
+    <input type="password" id="pwd-input" placeholder="Mot de passe" />
+    <button onclick="tryLogin()">Connexion</button>
+    <div class="login-error" id="login-error">Mot de passe incorrect</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">S</div>
+      <div>
+        <h1>Espace Gérant</h1>
+        <p>Snack Bosphore</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <a href="/" target="_blank" class="preview-link" style="margin:0">
+        👁 Voir le site
+      </a>
+      <button class="save-btn" id="save-btn" onclick="saveMenu()">
+        💾 Sauvegarder
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <a href="/" target="_blank" class="preview-link">
+      🌐 Voir le site public en direct ↗
+    </a>
+    <div id="admin-root"></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="admin.jsx"></script>
+
+<script type="text/babel">
+let adminPassword = '';
+let currentMenu = null;
+let currentCompose = null;
+let adminRoot = null;
+
+// ── LOGIN ──
+async function tryLogin() {
+  const pwd = document.getElementById('pwd-input').value;
+  if (!pwd) return;
+
+  // Test le mot de passe en essayant de sauvegarder un payload vide
+  const res = await fetch('/api/save-menu', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pwd, menu: null, compose: null, checkOnly: true })
+  });
+
+  if (res.status === 401) {
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+
+  adminPassword = pwd;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadAndRender();
+}
+
+document.getElementById('pwd-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryLogin();
+});
+
+// ── LOAD MENU ──
+async function loadAndRender() {
+  await new Promise(resolve => {
+    const check = () => window.AdminEditor ? resolve() : setTimeout(check, 30);
+    check();
+  });
+
+  try {
+    const res = await fetch('/api/get-menu');
+    const data = await res.json();
+    currentMenu = data.menu;
+    currentCompose = data.compose;
+  } catch(e) {
+    console.warn('Impossible de charger le menu');
+  }
+
+  renderAdmin();
+}
+
+function renderAdmin() {
+  if (!adminRoot) {
+    adminRoot = ReactDOM.createRoot(document.getElementById('admin-root'));
+  }
+
+  adminRoot.render(
+    React.createElement(window.AdminEditor, {
+      open: true,
+      onClose: () => {},
+      menu: currentMenu || window.DEFAULT_MENU || {},
+      compose: currentCompose || window.DEFAULT_COMPOSE || [],
+      onMenuChange: (m) => { currentMenu = m; },
+      onComposeChange: (c) => { currentCompose = c; },
+      embedded: true,
+    })
+  );
+}
+
+// ── SAVE ──
+async function saveMenu() {
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.className = 'save-btn saving';
+  btn.textContent = '⏳ Sauvegarde…';
+
+  try {
+    const res = await fetch('/api/save-menu', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password: adminPassword,
+        menu: currentMenu,
+        compose: currentCompose,
+      })
+    });
+
+    if (res.ok) {
+      btn.className = 'save-btn saved';
+      btn.textContent = '✅ Sauvegardé !';
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.className = 'save-btn';
+        btn.textContent = '💾 Sauvegarder';
+      }, 2000);
+    } else {
+      throw new Error('Erreur serveur');
+    }
+  } catch(e) {
+    btn.className = 'save-btn';
+    btn.textContent = '❌ Erreur — réessayer';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
 
