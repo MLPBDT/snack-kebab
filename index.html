@@ -94,8 +94,18 @@ async function loadAndMount() {
   // Écouter les mises à jour live depuis l'admin
   window.addEventListener('message', (e) => {
     if (e.data && e.data.type === 'ADMIN_UPDATE') {
-      Object.assign(SITE_TWEAKS, e.data.data);
-      root.render(React.createElement(window.SnackSite, { tweaks: {...SITE_TWEAKS}, mode: 'desktop' }));
+      // Deep merge pour éviter que photos soit écrasé partiellement
+      const newData = e.data.data;
+      Object.keys(newData).forEach(key => {
+        if (key === 'photos' && newData.photos && typeof newData.photos === 'object') {
+          SITE_TWEAKS.photos = { ...(SITE_TWEAKS.photos||{}), ...newData.photos };
+          if (newData.photos.about) SITE_TWEAKS.photos.about = [...newData.photos.about];
+          if (newData.photos.menu) SITE_TWEAKS.photos.menu = { ...newData.photos.menu };
+        } else {
+          SITE_TWEAKS[key] = newData[key];
+        }
+      });
+      root.render(React.createElement(window.SnackSite, { tweaks: JSON.parse(JSON.stringify(SITE_TWEAKS)), mode: 'desktop' }));
     }
     if (e.data && e.data.type === 'SCROLL_TO') {
       const el = document.getElementById(e.data.section);
