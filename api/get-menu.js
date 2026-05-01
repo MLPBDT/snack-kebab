@@ -23,6 +23,12 @@ const DEFAULT_MENU = {
     { id: 's3', name: 'Onion rings', desc: '6 pièces, sauce barbecue', price: 4, tag: '' },
     { id: 's4', name: 'Mozza sticks x4', desc: 'Bâtonnets de mozza panés, sauce tomate', price: 5, tag: '' },
   ],
+  boissons: [
+    { id: 'bo1', name: 'Coca-Cola', desc: '33cl', price: 2.5, tag: '' },
+    { id: 'bo2', name: 'Orangina', desc: '33cl', price: 2.5, tag: '' },
+    { id: 'bo3', name: 'Eau minérale', desc: '50cl', price: 1.5, tag: '' },
+    { id: 'bo4', name: "Jus d'orange", desc: 'Pressé maison', price: 3, tag: 'Maison' },
+  ],
 };
 
 const DEFAULT_COMPOSE = [
@@ -35,21 +41,27 @@ const DEFAULT_COMPOSE = [
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'no-store');
 
   try {
     const data = await kv.get('snack-data');
-    if (data) {
-      // Retourne siteData si présent, sinon wrap l'ancien format
-      if (data.siteData) {
-        res.json(data.siteData);
-      } else {
-        res.json(data);
-      }
-    } else {
-      res.json({ menu: DEFAULT_MENU, compose: DEFAULT_COMPOSE });
+    console.log('KV data keys:', data ? Object.keys(data) : 'null');
+
+    if (!data) {
+      return res.json({ menu: DEFAULT_MENU, compose: DEFAULT_COMPOSE });
     }
+
+    // Gère les deux formats possibles en base
+    if (data.siteData && typeof data.siteData === 'object') {
+      // Ancien format avec wrapper { siteData: {...} }
+      return res.json(data.siteData);
+    }
+
+    // Format direct { name, menu, marqueeItems, ... }
+    return res.json(data);
+
   } catch (err) {
-    console.error(err);
-    res.json({ menu: DEFAULT_MENU, compose: DEFAULT_COMPOSE });
+    console.error('KV get error:', err);
+    return res.json({ menu: DEFAULT_MENU, compose: DEFAULT_COMPOSE });
   }
 }
