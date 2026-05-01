@@ -233,17 +233,18 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
           maxWidth: 1280, margin: '0 auto', padding: `${isMobile ? 14 : 18}px ${PX}px`,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}>
             <div style={{
               width: 36, height: 36, borderRadius: radius.sm, background: palette.primary,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: palette.onPrimary, fontWeight: 900, fontSize: 18, fontFamily: fonts.display,
+              transition: 'opacity .15s',
             }}>{(t.name || 'KS').slice(0,1).toUpperCase()}</div>
             <div>
               <div className="ks-display" style={{ fontSize: isMobile ? 18 : 22, lineHeight: 1 }}>{t.name || 'Kebab Snack'}</div>
               {!isMobile && <div style={{ fontSize: 11, color: palette.muted, marginTop: 2 }}>{t.tagline || 'Le vrai goût, depuis 2008'}</div>}
             </div>
-          </div>
+          </a>
           {!isMobile && (
             <div style={{ display: 'flex', gap: 28, fontSize: 14, fontWeight: 500 }}>
               {['Menu', 'Composer', 'À propos', 'Contact'].map(l => (
@@ -706,4 +707,3 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
 }
 
 window.SnackSite = SnackSite;
-
