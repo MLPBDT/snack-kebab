@@ -195,6 +195,10 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
           <div class="field-row full">
             <div class="field"><label>Texte</label><textarea id="f-about-text" rows="4" placeholder="Votre histoire…"></textarea></div>
           </div>
+          <div style="margin-top:8px">
+            <div class="field" style="margin-bottom:12px"><label>Badges (4 points forts)</label></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="badges-grid"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -286,6 +290,12 @@ let D = {
   heroSub:'Viande grillée minute, pain maison cuit sur place, sauces fait-maison. Livraison en 30 min ou à emporter — tu choisis.',
   aboutTitle:'Une recette, une famille, une obsession.',
   aboutText:'Depuis 2008, on broche notre viande chaque matin, on pétrit notre pain à la main et on fait nos sauces sur place.',
+  aboutBadges:[
+    {k:'Halal',      v:'Certifié AVS'},
+    {k:'Maison',     v:'Pain & sauces'},
+    {k:'Frais',      v:'Livré chaque matin'},
+    {k:'0 surgelé',  v:'Tout cuisiné minute'},
+  ],
   address:'12 rue des Halles\n75001 Paris', phone:'01 23 45 67 89',
   horaires:[
     {jour:'Lun – Jeu', ouverture:'11:30', fermeture:'22:30', ferme:false},
@@ -363,6 +373,25 @@ function fillForms() {
   s('f-about-text', D.aboutText);
   document.getElementById('tb-name').textContent = D.name||'';
   document.getElementById('tb-letter').textContent = (D.name||'S')[0].toUpperCase();
+  renderBadges();
+}
+
+function renderBadges() {
+  if (!D.aboutBadges) D.aboutBadges = [{k:'',v:''},{k:'',v:''},{k:'',v:''},{k:'',v:''}];
+  const grid = document.getElementById('badges-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  D.aboutBadges.forEach((b, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:#fafaf7;border:1px solid rgba(0,0,0,.07);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px';
+    div.innerHTML = `
+      <input class="mi-input" value="${esc(b.k)}" placeholder="Ex: Halal"
+        oninput="D.aboutBadges[${i}].k=this.value" style="font-weight:600"/>
+      <input class="mi-input" value="${esc(b.v)}" placeholder="Ex: Certifié AVS"
+        oninput="D.aboutBadges[${i}].v=this.value"/>
+    `;
+    grid.appendChild(div);
+  });
 }
 
 function readForms() {
@@ -372,6 +401,7 @@ function readForms() {
   D.heroSub = g('f-herosub'); D.address = g('f-address');
   D.phone = g('f-phone'); D.aboutTitle = g('f-about-title');
   D.aboutText = g('f-about-text');
+  // badges sont mis à jour en temps réel via oninput
   document.getElementById('tb-name').textContent = D.name;
   document.getElementById('tb-letter').textContent = (D.name||'S')[0].toUpperCase();
 }
