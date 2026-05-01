@@ -336,15 +336,15 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             </div>
             {!isMobile && (
               <div style={{ display: 'flex', gap: 32, marginTop: 48, paddingTop: 24, borderTop: `1px solid ${palette.text}15` }}>
-                {[
-                  { v: '4.8', l: 'Note moyenne', sub: <div style={{ display: 'flex', gap: 1, color: palette.accent }}>{[1,2,3,4,5].map(i => <span key={i}>{I.star}</span>)}</div> },
+                {(t.heroStats || [
+                  { v: '4.8', l: 'Note moyenne', sub: '⭐⭐⭐⭐⭐' },
                   { v: '12k+', l: 'Kebabs servis', sub: 'Cette année' },
                   { v: '30min', l: 'Livraison', sub: 'Garanti ou offert' },
-                ].map((s, i) => (
+                ]).map((s, i) => (
                   <div key={i}>
                     <div style={{ fontSize: 28, fontWeight: 800, fontFamily: fonts.display, lineHeight: 1, color: palette.text }}>{s.v}</div>
                     <div style={{ fontSize: 12, color: palette.muted, marginTop: 4 }}>{s.l}</div>
-                    <div style={{ fontSize: 11, marginTop: 2 }}>{s.sub}</div>
+                    <div style={{ fontSize: 11, marginTop: 2, color: palette.muted }}>{s.sub}</div>
                   </div>
                 ))}
               </div>
@@ -375,7 +375,8 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
               transform: 'rotate(4deg)', display: 'flex', alignItems: 'center', gap: 6,
               color: palette.text,
             }}>
-              <span style={{ color: palette.primary }}>{I.flame}</span> Tout chaud, tout frais
+              <span style={{ color: palette.primary }}>{I.flame}</span>
+              {t.heroBadge1 || 'Tout chaud, tout frais'}
             </div>
             <div style={{
               position: 'absolute', bottom: '6%', left: isMobile ? '5%' : '-2%',
@@ -385,7 +386,7 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
               color: palette.text,
             }}>
               <div style={{ display: 'flex', gap: 1, color: palette.accent }}>{[1,2,3,4,5].map(i => <span key={i}>{I.star}</span>)}</div>
-              4.8 · 320 avis
+              {t.heroBadge2 || '4.8 · 320 avis'}
             </div>
           </div>
         </div>
@@ -413,7 +414,7 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', flexWrap: 'wrap', gap: 24, marginBottom: 32, flexDirection: isMobile ? 'column' : 'row' }}>
             <div>
               <div className="ks-section-eyebrow">— Notre carte</div>
-              <h2 className="ks-display" style={{ fontSize: isMobile ? 40 : 64, margin: 0, color: palette.text }}>Choisis ton kiff.</h2>
+              <h2 className="ks-display" style={{ fontSize: isMobile ? 40 : 64, margin: 0, color: palette.text }}>{t.menuTitle || 'Choisis ton kiff.'}</h2>
             </div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {[{k:'all',l:'Tout'},{k:'spicy',l:'🌶️ Épicé'},{k:'veg',l:'🌱 Végé'}].map(f => (
@@ -425,8 +426,8 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
           {/* Category tabs */}
           <div style={{ display: 'flex', gap: 8, marginBottom: 28, flexWrap: 'wrap', borderBottom: `1px solid ${palette.text}15`, paddingBottom: 16 }}>
             {Object.keys(MENU).map((k) => {
-              const labels = { kebabs: 'Kebabs', burgers: 'Burgers', tacos: 'Tacos', sides: 'Sides' };
-              const l = labels[k] || (k[0].toUpperCase() + k.slice(1));
+              const defaultLabels = { kebabs: 'Kebabs', burgers: 'Burgers', tacos: 'Tacos', sides: 'Sides' };
+              const l = (t.catLabels && t.catLabels[k]) || defaultLabels[k] || (k[0].toUpperCase() + k.slice(1));
               return (
               <button key={k} onClick={() => setActiveCat(k)} className="ks-chip"
                 data-active={activeCat === k}
@@ -483,9 +484,9 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: isMobile ? 'left' : 'center', marginBottom: 40 }}>
             <div className="ks-section-eyebrow">— Sur mesure</div>
-            <h2 className="ks-display" style={{ fontSize: isMobile ? 40 : 64, margin: 0, color: palette.text }}>Compose ton kebab.</h2>
+            <h2 className="ks-display" style={{ fontSize: isMobile ? 40 : 64, margin: 0, color: palette.text }}>{t.composeTitle || 'Compose ton kebab.'}</h2>
             <p style={{ fontSize: 16, color: palette.muted, marginTop: 12, maxWidth: 520, marginLeft: isMobile ? 0 : 'auto', marginRight: isMobile ? 0 : 'auto' }}>
-              5 étapes, ton kebab parfait. À partir de <b style={{ color: palette.text }}>7,50 €</b>.
+              {t.composeSub || <>5 étapes, ton kebab parfait. À partir de <b style={{ color: palette.text }}>{t.composePrice || '7,50 €'}</b>.</>}
             </p>
           </div>
 
@@ -662,7 +663,7 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
               {t.name || 'Kebab Snack'}
             </div>
             <p style={{ fontSize: 15, opacity: 0.7, marginTop: 14, maxWidth: 360, lineHeight: 1.55 }}>
-              {t.tagline || 'Le vrai goût, depuis 2008'}. Une bouchée et tu comprends.
+              {t.footerTagline || `${t.tagline || 'Le vrai goût, depuis 2008'}. Une bouchée et tu comprends.`}
             </p>
             <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
               {(t.socialLinks && t.socialLinks.length > 0
@@ -689,14 +690,16 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
           </div>
           <div>
             <div style={{ fontSize: 12, opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>Horaires</div>
-            {[
-              ['Lun – Jeu', '11:30 – 22:30'],
-              ['Ven – Sam', '11:30 – 00:00'],
-              ['Dim',       '12:00 – 22:00'],
-            ].map(([d, h]) => (
-              <div key={d} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, padding: '8px 0', borderBottom: `1px solid ${palette.bg}15` }}>
-                <span style={{ opacity: 0.7 }}>{d}</span>
-                <span style={{ fontVariantNumeric: 'tabular-nums' }}>{h}</span>
+            {(t.horaires || [
+              { jour: 'Lun – Jeu', ouverture: '11:30', fermeture: '22:30', ferme: false },
+              { jour: 'Ven – Sam', ouverture: '11:30', fermeture: '00:00', ferme: false },
+              { jour: 'Dim',       ouverture: '12:00', fermeture: '22:00', ferme: false },
+            ]).map((h, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, padding: '8px 0', borderBottom: `1px solid ${palette.bg}15` }}>
+                <span style={{ opacity: 0.7 }}>{h.jour}</span>
+                <span style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {h.ferme ? 'Fermé' : `${h.ouverture} – ${h.fermeture}`}
+                </span>
               </div>
             ))}
           </div>
