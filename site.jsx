@@ -129,6 +129,43 @@ function KebabArt({ seed = 0, palette, mode = 'auto' }) {
 }
 
 // ─── SITE ─────────────────────────────────────────────────────────────
+// ─── SOCIAL BUTTON avec animation hover ───────────────────────
+function SocialBtn({ s, palette }) {
+  const [hovered, setHovered] = React.useState(false);
+
+  const baseStyle = {
+    width: 36, height: 36, borderRadius: 999,
+    border: `1px solid ${hovered ? palette.primary : palette.bg+'30'}`,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: 11, fontWeight: 700,
+    color: hovered ? palette.primary : palette.bg,
+    background: hovered ? `${palette.primary}15` : 'transparent',
+    textDecoration: 'none',
+    opacity: hovered ? 1 : 0.8,
+    transform: hovered ? 'translateY(-3px) scale(1.1)' : 'translateY(0) scale(1)',
+    transition: 'all .2s cubic-bezier(.2,.8,.3,1)',
+    cursor: s.url ? 'pointer' : 'default',
+  };
+
+  if (s.url) {
+    return (
+      <a href={s.url} target="_blank" rel="noopener noreferrer"
+        style={baseStyle}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}>
+        {s.label}
+      </a>
+    );
+  }
+  return (
+    <div style={baseStyle}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}>
+      {s.label}
+    </div>
+  );
+}
+
 // ─── REVIEW CARD ──────────────────────────────────────────────
 function ReviewCard({ r, palette, fonts, radius, I }) {
   return (
@@ -692,10 +729,7 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
                 ? t.socialLinks
                 : [{ label: 'IG', url: '' }, { label: 'TT', url: '' }, { label: 'FB', url: '' }]
               ).filter(s => s.label).map((s, i) => (
-                s.url
-                  ? <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
-                      style={{ width: 36, height: 36, borderRadius: 999, border: `1px solid ${palette.bg}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, opacity: 0.8, color: palette.bg, textDecoration: 'none' }}>{s.label}</a>
-                  : <div key={i} style={{ width: 36, height: 36, borderRadius: 999, border: `1px solid ${palette.bg}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, opacity: 0.8 }}>{s.label}</div>
+                <SocialBtn key={i} s={s} palette={palette} />
               ))}
             </div>
           </div>
