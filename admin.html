@@ -144,6 +144,7 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
     <button class="tab" onclick="switchTab('horaires',this)">🕐 Horaires</button>
     <button class="tab" onclick="switchTab('menu',this)">🥙 Menu</button>
     <button class="tab" onclick="switchTab('photos',this)">📸 Photos</button>
+    <button class="tab" onclick="switchTab('avis',this)">⭐ Avis</button>
   </div>
 
   <div class="content">
@@ -274,10 +275,52 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /content -->
 
-<div class="toast" id="toast"></div>
+    <!-- AVIS -->
+    <div id="tab-avis" style="display:none">
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🔗</div>
+          <div><h2>Google Reviews</h2><small>Lien automatique vers vos vrais avis</small></div>
+        </div>
+        <div class="card-body">
+          <div class="field-row">
+            <div class="field">
+              <label>Google Place ID</label>
+              <input type="text" id="f-place-id" placeholder="Ex: ChIJN1t_tDeuEmsRUsoyG83frY4"
+                oninput="D.googlePlaceId=this.value"/>
+              <span style="font-size:11px;color:rgba(0,0,0,.4);margin-top:4px;display:block">
+                Trouve-le sur <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" style="color:#e63946">Google Place ID Finder ↗</a>
+              </span>
+            </div>
+            <div class="field">
+              <label>Titre de la section</label>
+              <input type="text" id="f-reviews-title" placeholder="Ex: 4.8 sur 320 avis."
+                oninput="D.reviewsTitle=this.value"/>
+            </div>
+          </div>
+          <div style="background:#f5f9ff;border:1px solid #dbeafe;border-radius:8px;padding:14px;font-size:13px;color:#1e40af;margin-top:8px">
+            💡 Entre ton Place ID → un bouton "Voir tous les avis Google" apparaît sur le site.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">✍️</div>
+          <div><h2>Avis manuels</h2><small>Copiez vos meilleurs avis Google / TripAdvisor</small></div>
+        </div>
+        <div class="card-body">
+          <div id="reviews-list"></div>
+          <button class="btn-add" onclick="addReview()">+ Ajouter un avis</button>
+        </div>
+      </div>
+
+    </div>
+
+</div><!-- /app --></div>
 
 <script>
 let adminPassword = '';
@@ -326,7 +369,13 @@ let D = {
       {id:'s4',name:'Mozza sticks x4', desc:'Bâtonnets de mozza panés, sauce tomate',price:5, tag:''},
     ],
   },
-  compose:[],
+  googlePlaceId: '',
+  reviewsTitle: '4.8 sur 320 avis.',
+  reviews: [
+    {n:'Marwan', d:'@marwan_eats', t:'Le kebab du quartier. Vraiment. Le pain est cuit minute, ça change tout.', s:5, source:'google'},
+    {n:'Léa', d:'Cliente régulière', t:'La sauce algérienne maison vaut le détour. Et la livraison en 25 min, top.', s:5, source:'google'},
+    {n:'Karim', d:'Avis Google', t:"11€ l'assiette XL, copieux et bien servi. Mes potes en redemandent.", s:4, source:'google'},
+  ],
   photos: {
     hero: '',
     about: ['', '', ''],
@@ -535,12 +584,65 @@ function deleteItem(cat, idx) {
 
 // TABS
 function switchTab(tab, btn) {
-  ['infos','horaires','menu','photos'].forEach(t =>
+  ['infos','horaires','menu','photos','avis'].forEach(t =>
     document.getElementById('tab-'+t).style.display = t===tab?'block':'none'
   );
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   if (tab === 'photos') renderPhotos();
+  if (tab === 'avis') renderReviews();
+}
+
+// REVIEWS
+function renderReviews() {
+  const s = (id, v) => { const el = document.getElementById(id); if(el) el.value = v||''; };
+  s('f-place-id', D.googlePlaceId);
+  s('f-reviews-title', D.reviewsTitle);
+
+  const list = document.getElementById('reviews-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!D.reviews) D.reviews = [];
+  D.reviews.forEach((r, i) => {
+    const div = document.createElement('div');
+    div.className = 'menu-item';
+    div.style.marginBottom = '12px';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div class="mi-label">Avis ${i+1}</div>
+        <button class="btn-del-row" onclick="D.reviews.splice(${i},1);renderReviews()" title="Supprimer">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:10px;margin-bottom:8px">
+        <div>
+          <div class="mi-label">Nom</div>
+          <input class="mi-input" value="${esc(r.n||'')}" placeholder="Prénom"
+            oninput="D.reviews[${i}].n=this.value"/>
+        </div>
+        <div>
+          <div class="mi-label">Source</div>
+          <input class="mi-input" value="${esc(r.d||'')}" placeholder="Ex: Google, TripAdvisor…"
+            oninput="D.reviews[${i}].d=this.value"/>
+        </div>
+        <div>
+          <div class="mi-label">Note /5</div>
+          <input class="mi-input" type="number" min="1" max="5" value="${r.s||5}"
+            oninput="D.reviews[${i}].s=parseInt(this.value)||5"/>
+        </div>
+      </div>
+      <div>
+        <div class="mi-label">Texte de l'avis</div>
+        <textarea class="mi-input" rows="2" placeholder="Texte de l'avis…"
+          oninput="D.reviews[${i}].t=this.value">${esc(r.t||'')}</textarea>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function addReview() {
+  if (!D.reviews) D.reviews = [];
+  D.reviews.push({n:'', d:'Google', t:'', s:5, source:'google'});
+  renderReviews();
 }
 
 // PHOTOS
