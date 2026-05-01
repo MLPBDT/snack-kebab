@@ -25,7 +25,8 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
 
 /* TOPBAR */
 .topbar{background:#fff;border-bottom:1px solid rgba(0,0,0,.08);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.tb-brand{display:flex;align-items:center;gap:12px}
+.tb-brand{display:flex;align-items:center;gap:12px;cursor:pointer}
+.tb-brand:hover .tb-logo{opacity:.85}
 .tb-logo{width:34px;height:34px;background:#e63946;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:17px}
 .tb-brand h1{font-size:16px;font-weight:700}
 .tb-brand small{display:block;font-size:11px;color:rgba(0,0,0,.4);margin-top:1px}
@@ -95,6 +96,17 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1a1a;color:#fff;padding:12px 28px;border-radius:999px;font-size:14px;font-weight:600;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .toast.err{background:#c62828}
+
+/* PHOTOS */
+.photo-slot{display:flex;flex-direction:column;gap:8px}
+.photo-preview{width:100%;aspect-ratio:4/3;border-radius:10px;border:2px dashed rgba(0,0,0,.12);background:#f5f5f5;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:rgba(0,0,0,.2);position:relative}
+.photo-preview img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.photo-actions{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
+.photo-url{padding:8px 10px;border-radius:7px;border:1.5px solid rgba(0,0,0,.1);font:inherit;font-size:12px;outline:none;background:#fff;width:100%;transition:border-color .15s}
+.photo-url:focus{border-color:#e63946}
+.upload-btn{padding:8px 12px;border-radius:7px;background:#f0f0f0;border:1px solid rgba(0,0,0,.1);font:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;transition:background .15s}
+.upload-btn:hover{background:#e5e5e5}
+.uploading{opacity:.6;pointer-events:none}
 </style>
 </head>
 <body>
@@ -114,13 +126,13 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
 <!-- APP -->
 <div id="app">
   <div class="topbar">
-    <div class="tb-brand">
+    <a href="/" class="tb-brand" style="text-decoration:none;color:inherit" title="Retour au site">
       <div class="tb-logo" id="tb-letter">S</div>
       <div>
         <h1>Espace Gérant</h1>
         <small id="tb-name">Snack Bosphore</small>
       </div>
-    </div>
+    </a>
     <div class="tb-actions">
       <a href="/" target="_blank" class="btn-ghost">👁 Voir le site</a>
       <button class="btn-save" id="btn-save" onclick="saveAll()">💾 Sauvegarder</button>
@@ -131,6 +143,7 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
     <button class="tab active" onclick="switchTab('infos',this)">🏪 Infos générales</button>
     <button class="tab" onclick="switchTab('horaires',this)">🕐 Horaires</button>
     <button class="tab" onclick="switchTab('menu',this)">🥙 Menu</button>
+    <button class="tab" onclick="switchTab('photos',this)">📸 Photos</button>
   </div>
 
   <div class="content">
@@ -215,6 +228,48 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
       </div>
     </div>
 
+    <!-- PHOTOS -->
+    <div id="tab-photos" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🖼️</div>
+          <div><h2>Photo principale (Hero)</h2><small>Grande image affichée en haut du site</small></div>
+        </div>
+        <div class="card-body">
+          <div id="hero-preview"></div>
+          <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin-top:8px">
+            <div class="field">
+              <label>URL de l'image</label>
+              <input type="url" id="hero-url" placeholder="https://..." oninput="setPhoto('hero',this.value)"/>
+            </div>
+            <label class="upload-btn" for="hero-file" title="Uploader depuis votre appareil">📁 Uploader
+              <input type="file" id="hero-file" accept="image/*" style="display:none" onchange="uploadPhoto('hero',this)"/>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">📸</div>
+          <div><h2>Photos À propos</h2><small>3 photos dans la section histoire</small></div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px" id="about-photos-grid"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🍽️</div>
+          <div><h2>Photos des catégories</h2><small>Une photo par catégorie du menu</small></div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="menu-photos-grid"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -261,7 +316,12 @@ let D = {
       {id:'s4',name:'Mozza sticks x4', desc:'Bâtonnets de mozza panés, sauce tomate',price:5, tag:''},
     ],
   },
-  compose:[]
+  compose:[],
+  photos: {
+    hero: '',
+    about: ['', '', ''],
+    menu: { kebabs:'', burgers:'', tacos:'', sides:'' }
+  }
 };
 
 // LOGIN
@@ -403,11 +463,129 @@ function deleteItem(cat, idx) {
 
 // TABS
 function switchTab(tab, btn) {
-  ['infos','horaires','menu'].forEach(t =>
+  ['infos','horaires','menu','photos'].forEach(t =>
     document.getElementById('tab-'+t).style.display = t===tab?'block':'none'
   );
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  if (tab === 'photos') renderPhotos();
+}
+
+// PHOTOS
+function renderPhotos() {
+  if (!D.photos) D.photos = { hero:'', about:['','',''], menu:{kebabs:'',burgers:'',tacos:'',sides:''} };
+
+  // Hero
+  document.getElementById('hero-url').value = D.photos.hero || '';
+  renderPhotoPreview('hero-preview', D.photos.hero);
+
+  // About (3 slots)
+  const ag = document.getElementById('about-photos-grid');
+  ag.innerHTML = '';
+  ['Photo 1','Photo 2','Photo 3'].forEach((label, i) => {
+    ag.appendChild(makePhotoSlot(label, D.photos.about[i]||'', `about-${i}`,
+      v => { D.photos.about[i] = v; renderPhotoPreviewInSlot(`about-${i}`, v); }
+    ));
+  });
+
+  // Menu cats
+  const mg = document.getElementById('menu-photos-grid');
+  mg.innerHTML = '';
+  Object.keys(CAT_LABELS).forEach(cat => {
+    mg.appendChild(makePhotoSlot(CAT_LABELS[cat], D.photos.menu[cat]||'', `menucat-${cat}`,
+      v => { D.photos.menu[cat] = v; renderPhotoPreviewInSlot(`menucat-${cat}`, v); }
+    ));
+  });
+}
+
+function makePhotoSlot(label, url, key, onChange) {
+  const div = document.createElement('div');
+  div.className = 'photo-slot';
+  div.innerHTML = `
+    <div class="mi-label">${label}</div>
+    <div class="photo-preview" id="preview-${key}">
+      ${url ? `<img src="${esc(url)}" alt=""/>` : '🖼️'}
+    </div>
+    <div class="photo-actions">
+      <input type="url" class="photo-url" placeholder="https://..." value="${esc(url)}"
+        oninput="updatePhotoUrl('${key}', this.value)"/>
+      <label class="upload-btn" title="Uploader une photo">
+        📁
+        <input type="file" accept="image/*" style="display:none"
+          onchange="uploadPhotoSlot('${key}', this)"/>
+      </label>
+    </div>`;
+  div._onChange = onChange;
+  return div;
+}
+
+// Stocke les callbacks par key
+const photoCallbacks = {};
+function updatePhotoUrl(key, url) {
+  // Met à jour D selon la clé
+  if (key === 'hero') { D.photos.hero = url; renderPhotoPreview('hero-preview', url); return; }
+  const m = key.match(/^about-(\d)$/);
+  if (m) { D.photos.about[+m[1]] = url; renderPhotoPreviewInSlot(key, url); return; }
+  const m2 = key.match(/^menucat-(\w+)$/);
+  if (m2) { D.photos.menu[m2[1]] = url; renderPhotoPreviewInSlot(key, url); }
+}
+
+function renderPhotoPreview(containerId, url) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = url ? `<img src="${esc(url)}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;display:block"/>` : '';
+}
+
+function renderPhotoPreviewInSlot(key, url) {
+  const el = document.getElementById('preview-'+key);
+  if (!el) return;
+  el.innerHTML = url ? `<img src="${esc(url)}" alt=""/>` : '🖼️';
+}
+
+function setPhoto(key, url) { updatePhotoUrl(key, url); }
+
+// UPLOAD
+async function uploadPhotoSlot(key, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const label = input.closest('label');
+  if (label) { label.classList.add('uploading'); label.textContent = '⏳'; }
+  const url = await doUpload(file);
+  if (label) { label.classList.remove('uploading'); label.innerHTML = '📁<input type="file" accept="image/*" style="display:none" onchange="uploadPhotoSlot(\''+key+'\',this)"/>'; }
+  if (url) updatePhotoUrl(key, url);
+}
+
+async function uploadPhoto(key, input) {
+  const file = input.files[0];
+  if (!file) return;
+  showToast('⏳ Upload en cours…');
+  const url = await doUpload(file);
+  if (url) {
+    updatePhotoUrl(key, url);
+    const urlInput = document.getElementById(key+'-url');
+    if (urlInput) urlInput.value = url;
+    showToast('✅ Photo uploadée !');
+  }
+}
+
+async function doUpload(file) {
+  try {
+    const r = await fetch('/api/upload-image', {
+      method: 'POST',
+      headers: {
+        'x-admin-password': adminPassword,
+        'x-filename': file.name,
+        'content-type': file.type,
+      },
+      body: file
+    });
+    if (!r.ok) throw new Error();
+    const data = await r.json();
+    return data.url;
+  } catch(e) {
+    showToast('❌ Erreur upload', true);
+    return null;
+  }
 }
 
 // SAVE
