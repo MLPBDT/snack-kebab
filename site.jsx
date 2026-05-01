@@ -213,7 +213,16 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
   };
 
   // Reusable styles (unique-named so we don't collide with anything else)
-  const isMobile = mode === 'mobile';
+  // Détection responsive réelle — prop mode utilisée comme fallback pour l'admin
+  const [windowWidth, setWindowWidth] = React.useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1280
+  );
+  React.useEffect(() => {
+    const handler = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  const isMobile = mode === 'mobile' || windowWidth < 768;
   const isDark = ['street', 'neon'].includes(t.palette);
 
   const css = `
@@ -238,6 +247,13 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
     @keyframes ks-scroll { from { transform: translateX(0); } to { transform: translateX(-25%); } }
     .ks-pulse { animation: ks-pulse 2s ease-in-out infinite; }
     @keyframes ks-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+    /* Responsive fixes */
+    .ks-root img { max-width: 100%; }
+    .ks-root * { box-sizing: border-box; }
+    @media (max-width: 767px) {
+      .ks-btn { padding: 12px 18px; font-size: 14px; }
+      .ks-chip { padding: 6px 12px; font-size: 12px; }
+    }
   `;
 
   // Filter menu items
