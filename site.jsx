@@ -234,8 +234,8 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
     .ks-link { color: inherit; text-decoration: none; }
     .ks-icon-btn { width: 40px; height: 40px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid ${palette.text}15; background: ${palette.surface}; cursor: pointer; color: ${palette.text}; position: relative; }
     .ks-grain { background-image: radial-gradient(${palette.text}08 1px, transparent 1px); background-size: 3px 3px; }
-    .ks-marquee { display: flex; gap: 40px; animation: ks-scroll 30s linear infinite; }
-    @keyframes ks-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .ks-marquee { display: flex; gap: 0; animation: ks-scroll 20s linear infinite; width: max-content; }
+    @keyframes ks-scroll { from { transform: translateX(0); } to { transform: translateX(-25%); } }
     .ks-pulse { animation: ks-pulse 2s ease-in-out infinite; }
     @keyframes ks-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
   `;
@@ -394,13 +394,13 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
       {/* ── MARQUEE ───────────────────────────────────────────────── */}
       <div style={{ background: palette.primary, color: palette.onPrimary, padding: '14px 0', overflow: 'hidden', borderTop: `1px solid ${palette.text}10`, borderBottom: `1px solid ${palette.text}10` }}>
         <div className="ks-marquee">
-          {[...Array(2)].map((_, k) => (
+          {[...Array(4)].map((_, k) => (
             <React.Fragment key={k}>
               {(t.marqueeItems && t.marqueeItems.length > 0
                 ? t.marqueeItems
                 : ['🔥 Menu midi à 9,90€', '★ Livraison 30 min ou offerte', '🌶️ Nouveau · Tacos XXL', '🥙 Halal · 100% maison', '🚀 -10% sur ta 1re commande']
               ).map((s, i) => (
-                <div key={`${k}-${i}`} className="ks-display" style={{ fontSize: 22, whiteSpace: 'nowrap' }}>{s}</div>
+                <div key={`${k}-${i}`} className="ks-display" style={{ fontSize: 22, whiteSpace: 'nowrap', paddingRight: 40 }}>{s}</div>
               ))}
             </React.Fragment>
           ))}
