@@ -399,13 +399,28 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
                   { v: '4.8', l: 'Note moyenne', sub: '⭐⭐⭐⭐⭐' },
                   { v: '12k+', l: 'Kebabs servis', sub: 'Cette année' },
                   { v: '30min', l: 'Livraison', sub: 'Garanti ou offert' },
-                ]).map((s, i) => (
-                  <div key={i}>
-                    <div style={{ fontSize: 28, fontWeight: 800, fontFamily: fonts.display, lineHeight: 1, color: palette.text }}>{s.v}</div>
-                    <div style={{ fontSize: 12, color: palette.muted, marginTop: 4 }}>{s.l}</div>
-                    <div style={{ fontSize: 11, marginTop: 2, color: palette.muted }}>{s.sub}</div>
-                  </div>
-                ))}
+                ]).map((s, i) => {
+                  // Détecte si le sous-texte est une note (contient ⭐ ou des étoiles)
+                  const isStars = /[⭐★✦]/.test(s.sub) || /^\d+(\.\d+)?$/.test(s.sub);
+                  const starCount = isStars && /^\d+(\.\d+)?$/.test(s.sub)
+                    ? Math.round(parseFloat(s.sub))
+                    : (s.sub.match(/[⭐★]/g) || []).length || 5;
+                  return (
+                    <div key={i}>
+                      <div style={{ fontSize: 28, fontWeight: 800, fontFamily: fonts.display, lineHeight: 1, color: palette.text }}>{s.v}</div>
+                      <div style={{ fontSize: 12, color: palette.muted, marginTop: 4 }}>{s.l}</div>
+                      {isStars ? (
+                        <div style={{ display: 'flex', gap: 1, color: palette.accent, marginTop: 4 }}>
+                          {[1,2,3,4,5].map(n => (
+                            <span key={n} style={{ opacity: n <= starCount ? 1 : 0.25 }}>{I.star}</span>
+                          ))}
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: 11, marginTop: 2, color: palette.muted }}>{s.sub}</div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
