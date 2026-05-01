@@ -343,7 +343,9 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
 
     </div>
 
-</div><!-- /app --></div>
+</div><!-- /app -->
+
+<div class="toast" id="toast"></div>
 
 <script>
 let adminPassword = '';
@@ -852,10 +854,12 @@ async function saveAll() {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({password:adminPassword, siteData:D})
     });
-    if (!r.ok) throw new Error('Erreur ' + r.status);
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Erreur ' + r.status);
     btn.className='btn-save saved'; btn.textContent='✅ Sauvegardé !';
     showToast('✅ Modifications enregistrées !');
   } catch(e) {
+    console.error('Save error:', e);
     btn.className='btn-save'; btn.textContent='❌ Erreur — réessayer';
     showToast('❌ ' + (e.message || 'Erreur réseau'), true);
   } finally {
@@ -863,14 +867,15 @@ async function saveAll() {
       btn.disabled=false;
       btn.className='btn-save';
       btn.innerHTML='💾 Sauvegarder';
-    }, 2500);
+    }, 3000);
   }
 }
 
 function showToast(msg, err=false) {
   const t = document.getElementById('toast');
+  if (!t) { console.warn('Toast:', msg); return; }
   t.textContent=msg; t.className='toast'+(err?' err':'')+' show';
-  setTimeout(() => t.className='toast'+(err?' err':''), 3200);
+  setTimeout(() => { if(t) t.className='toast'+(err?' err':''); }, 3200);
 }
 
 function esc(s) {
