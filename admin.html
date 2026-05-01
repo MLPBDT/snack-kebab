@@ -6,7 +6,7 @@
 <title>Espace Gérant</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5f4f0;color:#1a1a1a;font-size:14px}
+body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f0eee9;color:#1a1a1a;font-size:13px;height:100vh;overflow:hidden}
 
 /* LOGIN */
 #login-screen{position:fixed;inset:0;background:#0e0e0e;display:flex;align-items:center;justify-content:center;z-index:9999}
@@ -16,97 +16,118 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
 .lbox p{color:rgba(255,255,255,.38);font-size:13px;margin-bottom:30px}
 .lbox input{width:100%;padding:13px 16px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#fff;font:inherit;font-size:15px;outline:none;margin-bottom:12px;transition:border-color .15s}
 .lbox input:focus{border-color:#e63946}
-.lbox button{width:100%;padding:14px;border-radius:10px;border:0;background:#e63946;color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s}
+.lbox button{width:100%;padding:14px;border-radius:10px;border:0;background:#e63946;color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
 .lbox button:hover{background:#c8313e}
-.lerr{color:#e63946;font-size:13px;margin-top:12px;display:none}
+.lerr{color:#e63946;font-size:12px;margin-top:10px;display:none}
 
-/* APP */
-#app{display:none}
-
-/* TOPBAR */
-.topbar{background:#fff;border-bottom:1px solid rgba(0,0,0,.08);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.tb-brand{display:flex;align-items:center;gap:12px;cursor:pointer}
-.tb-brand:hover .tb-logo{opacity:.85}
-.tb-logo{width:34px;height:34px;background:#e63946;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:17px}
-.tb-brand h1{font-size:16px;font-weight:700}
-.tb-brand small{display:block;font-size:11px;color:rgba(0,0,0,.4);margin-top:1px}
-.tb-actions{display:flex;gap:10px;align-items:center}
-.btn-ghost{padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:transparent;color:#555;font:inherit;font-size:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-.btn-ghost:hover{background:#f0f0f0}
-.btn-save{padding:10px 20px;border-radius:8px;border:0;background:#1a1a1a;color:#fff;font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .2s}
-.btn-save:hover{background:#333}
-.btn-save:disabled{background:#aaa;cursor:not-allowed}
+/* LAYOUT */
+#app{display:none;height:100vh;flex-direction:column}
+.topbar{background:#1a1a1a;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;gap:12px}
+.tb-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
+.tb-logo{width:30px;height:30px;background:#e63946;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0}
+.tb-name{font-size:14px;font-weight:700;color:#fff}
+.tb-sub{font-size:10px;color:rgba(255,255,255,.4)}
+.tb-center{display:flex;align-items:center;gap:6px}
+.device-btn{padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.6);font:inherit;font-size:12px;cursor:pointer;transition:all .15s}
+.device-btn.active{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3)}
+.tb-actions{display:flex;gap:8px;align-items:center}
+.btn-preview-link{padding:6px 12px;border-radius:7px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.7);font:inherit;font-size:12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.btn-preview-link:hover{background:rgba(255,255,255,.1)}
+.btn-save{padding:7px 16px;border-radius:7px;border:0;background:#e63946;color:#fff;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s}
+.btn-save:hover{background:#c8313e}
+.btn-save:disabled{background:#666;cursor:not-allowed}
 .btn-save.saving{background:#1565c0}
 .btn-save.saved{background:#2e7d32}
 
-/* TABS */
-.tabs{background:#fff;border-bottom:1px solid rgba(0,0,0,.08);padding:0 28px;display:flex}
-.tab{padding:14px 18px;border:0;background:transparent;font:inherit;font-size:14px;font-weight:500;color:rgba(0,0,0,.45);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
-.tab:hover{color:#1a1a1a}
-.tab.active{color:#e63946;border-bottom-color:#e63946;font-weight:600}
+/* EDITOR LAYOUT */
+.editor{display:flex;flex:1;overflow:hidden;gap:0}
 
-/* CONTENT */
-.content{max-width:900px;margin:0 auto;padding:28px 24px}
+/* LEFT PANEL */
+.panel{width:340px;flex-shrink:0;background:#fff;display:flex;flex-direction:column;border-right:1px solid rgba(0,0,0,.1);overflow:hidden}
+.panel-tabs{display:flex;overflow-x:auto;border-bottom:1px solid rgba(0,0,0,.08);flex-shrink:0}
+.panel-tabs::-webkit-scrollbar{display:none}
+.ptab{padding:10px 14px;border:0;background:transparent;font:inherit;font-size:12px;font-weight:500;color:rgba(0,0,0,.45);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .15s}
+.ptab:hover{color:#1a1a1a}
+.ptab.active{color:#e63946;border-bottom-color:#e63946;font-weight:700}
+.panel-body{flex:1;overflow-y:auto;padding:16px}
+.panel-body::-webkit-scrollbar{width:4px}
+.panel-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:2px}
 
-/* CARD */
-.card{background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,.07);overflow:hidden;margin-bottom:20px}
-.card-head{padding:16px 20px;border-bottom:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:10px}
-.card-icon{width:32px;height:32px;border-radius:8px;background:#fef0f0;display:flex;align-items:center;justify-content:center;font-size:16px}
-.card-head h2{font-size:15px;font-weight:700}
-.card-head small{font-size:12px;color:rgba(0,0,0,.4)}
-.card-body{padding:20px}
+/* SECTION LABELS */
+.sec-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#e63946;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid rgba(230,57,70,.15)}
+.sec-label:first-child{margin-top:0}
 
 /* FIELDS */
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.field-row.full{grid-template-columns:1fr}
-.field{display:flex;flex-direction:column;gap:6px}
-.field label{font-size:11px;font-weight:600;color:rgba(0,0,0,.45);text-transform:uppercase;letter-spacing:.06em}
-.field input,.field textarea{padding:10px 12px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);font:inherit;font-size:14px;outline:none;transition:border-color .15s;background:#fff;width:100%}
-.field input:focus,.field textarea:focus{border-color:#e63946}
-.field textarea{resize:vertical;min-height:80px;line-height:1.55}
+.frow{display:grid;gap:10px;margin-bottom:10px}
+.frow.c2{grid-template-columns:1fr 1fr}
+.frow.c3{grid-template-columns:1fr 1fr 1fr}
+.f{display:flex;flex-direction:column;gap:4px}
+.f label{font-size:10px;font-weight:600;color:rgba(0,0,0,.4);text-transform:uppercase;letter-spacing:.05em}
+.f input,.f textarea{padding:8px 10px;border-radius:7px;border:1.5px solid rgba(0,0,0,.1);font:inherit;font-size:12px;outline:none;transition:border-color .15s;background:#fff;width:100%}
+.f input:focus,.f textarea:focus{border-color:#e63946}
+.f textarea{resize:vertical;min-height:60px;line-height:1.5}
+
+/* INLINE LIST ITEMS */
+.list-item{background:#f8f8f6;border:1px solid rgba(0,0,0,.07);border-radius:8px;padding:10px;margin-bottom:8px}
+.list-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.list-row:last-child{margin-bottom:0}
+.mi-input{width:100%;padding:7px 9px;border-radius:6px;border:1.5px solid rgba(0,0,0,.08);font:inherit;font-size:12px;outline:none;background:#fff;transition:border-color .15s}
+.mi-input:focus{border-color:#e63946}
+.mi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:rgba(0,0,0,.4);margin-bottom:4px}
+.btn-del{width:26px;height:26px;border-radius:6px;border:0;background:transparent;color:rgba(0,0,0,.3);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.btn-del:hover{background:#fee;color:#c00}
+.btn-add{width:100%;padding:8px;border:1.5px dashed rgba(0,0,0,.15);border-radius:8px;background:transparent;color:rgba(0,0,0,.4);font:inherit;font-size:12px;cursor:pointer;margin-top:4px;transition:all .15s}
+.btn-add:hover{border-color:#e63946;color:#e63946;background:#fff5f5}
 
 /* HORAIRES */
-.hor-grid{display:flex;flex-direction:column;gap:10px}
-.hor-row{display:grid;grid-template-columns:1fr 110px 110px auto auto;gap:10px;align-items:center}
-.hor-input{padding:9px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);font:inherit;font-size:13px;outline:none;background:#fff;width:100%;transition:border-color .15s;text-align:center}
+.hor-row{display:grid;grid-template-columns:1fr 80px 80px auto auto;gap:6px;align-items:center;margin-bottom:6px}
+.hor-input{padding:7px 8px;border-radius:6px;border:1.5px solid rgba(0,0,0,.1);font:inherit;font-size:12px;outline:none;background:#fff;width:100%;transition:border-color .15s;text-align:center}
 .hor-input:focus{border-color:#e63946}
-.hor-input:disabled{background:#f5f5f5;color:#999}
-.ferme-lbl{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(0,0,0,.5);white-space:nowrap;cursor:pointer}
-.btn-del-row{width:30px;height:30px;border-radius:7px;border:0;background:transparent;color:rgba(0,0,0,.3);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
-.btn-del-row:hover{background:#fee;color:#c00}
-.btn-add{width:100%;padding:11px;border:1.5px dashed rgba(0,0,0,.15);border-radius:10px;background:transparent;color:rgba(0,0,0,.45);font:inherit;font-size:13px;cursor:pointer;margin-top:10px;transition:all .15s}
-.btn-add:hover{border-color:#e63946;color:#e63946;background:#fff8f8}
+.hor-input:disabled{background:#f5f5f5;color:#aaa}
+.ferme-lbl{display:flex;align-items:center;gap:4px;font-size:11px;color:rgba(0,0,0,.5);white-space:nowrap;cursor:pointer}
 
-/* MENU */
-.cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
-.cat-tab{padding:7px 14px;border-radius:999px;border:1.5px solid rgba(0,0,0,.1);background:transparent;font:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
-.cat-tab:hover{background:#f5f5f5}
+/* MENU CATS */
+.cat-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.cat-tab{padding:5px 11px;border-radius:999px;border:1.5px solid rgba(0,0,0,.1);background:transparent;font:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s}
 .cat-tab.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
-.cat-count{opacity:.5;margin-left:4px}
-.menu-item{background:#fafaf7;border:1px solid rgba(0,0,0,.07);border-radius:10px;padding:14px;margin-bottom:10px}
-.mi-top{display:grid;grid-template-columns:2fr 90px 110px 36px;gap:10px;align-items:start}
-.mi-desc{margin-top:10px}
-.mi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:rgba(0,0,0,.4);margin-bottom:5px}
-.mi-input{width:100%;padding:8px 10px;border-radius:7px;border:1.5px solid rgba(0,0,0,.08);font:inherit;font-size:13px;outline:none;background:#fff;transition:border-color .15s}
-.mi-input:focus{border-color:#e63946}
-.btn-del-item{width:32px;height:32px;border-radius:7px;border:0;background:transparent;color:rgba(0,0,0,.3);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;margin-top:18px}
+.cat-count{opacity:.5;margin-left:3px}
+.menu-item{background:#f8f8f6;border:1px solid rgba(0,0,0,.07);border-radius:8px;padding:10px;margin-bottom:8px}
+.mi-top{display:grid;gap:8px}
+.mi-desc{margin-top:8px}
+.btn-del-item{width:28px;height:28px;border-radius:6px;border:0;background:transparent;color:rgba(0,0,0,.3);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:16px}
 .btn-del-item:hover{background:#fee;color:#c00}
 
+/* PHOTO SLOTS */
+.photo-slot{display:flex;flex-direction:column;gap:6px}
+.photo-preview{width:100%;aspect-ratio:16/9;border-radius:8px;border:2px dashed rgba(0,0,0,.12);background:#f5f5f5;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px;color:rgba(0,0,0,.2);position:relative}
+.photo-preview img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo-preview.square{aspect-ratio:1}
+.photo-actions{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
+.photo-url{padding:7px 9px;border-radius:6px;border:1.5px solid rgba(0,0,0,.1);font:inherit;font-size:11px;outline:none;background:#fff;width:100%;transition:border-color .15s}
+.photo-url:focus{border-color:#e63946}
+.upload-btn{padding:7px 10px;border-radius:6px;background:#f0f0f0;border:1px solid rgba(0,0,0,.1);font:inherit;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;transition:background .15s}
+.upload-btn:hover{background:#e5e5e5}
+
+/* PREVIEW AREA */
+.preview-area{flex:1;overflow:hidden;display:flex;flex-direction:column;background:#e8e6e1;position:relative}
+.preview-toolbar{padding:8px 12px;background:#2a2a2a;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.preview-url{flex:1;padding:5px 10px;border-radius:6px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);font:inherit;font-size:11px;border:0;outline:none}
+.preview-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:auto;padding:16px}
+.iframe-desktop{width:100%;height:100%;border:0;border-radius:0}
+.iframe-mobile-wrap{background:#1a1a1a;border-radius:40px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.4);flex-shrink:0;overflow:hidden}
+.iframe-mobile{width:375px;height:700px;border:0;border-radius:30px;overflow:hidden}
+
+/* BADGE GRID */
+.badge-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.badge-card{background:#f8f8f6;border:1px solid rgba(0,0,0,.07);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:5px}
+
 /* TOAST */
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1a1a;color:#fff;padding:12px 28px;border-radius:999px;font-size:14px;font-weight:600;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a1a;color:#fff;padding:10px 22px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .toast.err{background:#c62828}
 
-/* PHOTOS */
-.photo-slot{display:flex;flex-direction:column;gap:8px}
-.photo-preview{width:100%;aspect-ratio:4/3;border-radius:10px;border:2px dashed rgba(0,0,0,.12);background:#f5f5f5;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:rgba(0,0,0,.2);position:relative}
-.photo-preview img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.photo-actions{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
-.photo-url{padding:8px 10px;border-radius:7px;border:1.5px solid rgba(0,0,0,.1);font:inherit;font-size:12px;outline:none;background:#fff;width:100%;transition:border-color .15s}
-.photo-url:focus{border-color:#e63946}
-.upload-btn{padding:8px 12px;border-radius:7px;background:#f0f0f0;border:1px solid rgba(0,0,0,.1);font:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;transition:background .15s}
-.upload-btn:hover{background:#e5e5e5}
-.uploading{opacity:.6;pointer-events:none}
+/* INFO BOX */
+.info-box{background:#f0f7ff;border:1px solid #bee3f8;border-radius:8px;padding:10px 12px;font-size:11px;color:#2b6cb0;margin-bottom:10px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -117,7 +138,7 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
     <div class="lbox-emoji">🥙</div>
     <h1>Espace Gérant</h1>
     <p>Connectez-vous pour modifier votre site</p>
-    <input type="password" id="pwd" placeholder="Mot de passe" />
+    <input type="password" id="pwd" placeholder="Mot de passe"/>
     <button onclick="tryLogin()">Se connecter</button>
     <div class="lerr" id="lerr">Mot de passe incorrect</div>
   </div>
@@ -125,275 +146,188 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
 
 <!-- APP -->
 <div id="app">
+
+  <!-- TOPBAR -->
   <div class="topbar">
-    <a href="/" class="tb-brand" style="text-decoration:none;color:inherit" title="Retour au site">
+    <a href="/" class="tb-brand" title="Voir le site">
       <div class="tb-logo" id="tb-letter">S</div>
       <div>
-        <h1>Espace Gérant</h1>
-        <small id="tb-name">Snack Bosphore</small>
+        <div class="tb-name" id="tb-name">Snack Bosphore</div>
+        <div class="tb-sub">Espace gérant</div>
       </div>
     </a>
+    <div class="tb-center">
+      <button class="device-btn active" id="btn-desktop" onclick="setDevice('desktop')">🖥 Desktop</button>
+      <button class="device-btn" id="btn-mobile" onclick="setDevice('mobile')">📱 Mobile</button>
+    </div>
     <div class="tb-actions">
-      <a href="/" target="_blank" class="btn-ghost">👁 Voir le site</a>
+      <a href="/" target="_blank" class="btn-preview-link">↗ Voir le site</a>
       <button class="btn-save" id="btn-save" onclick="saveAll()">💾 Sauvegarder</button>
     </div>
   </div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('infos',this)">🏪 Infos générales</button>
-    <button class="tab" onclick="switchTab('horaires',this)">🕐 Horaires</button>
-    <button class="tab" onclick="switchTab('menu',this)">🥙 Menu</button>
-    <button class="tab" onclick="switchTab('photos',this)">📸 Photos</button>
-    <button class="tab" onclick="switchTab('avis',this)">⭐ Avis</button>
-  </div>
+  <!-- EDITOR -->
+  <div class="editor">
 
-  <div class="content">
-
-    <!-- INFOS -->
-    <div id="tab-infos">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">🏪</div>
-          <div><h2>Identité</h2><small>Nom et slogan affichés sur le site</small></div>
-        </div>
-        <div class="card-body">
-          <div class="field-row">
-            <div class="field"><label>Nom du snack</label><input id="f-name" type="text" placeholder="Snack Bosphore"/></div>
-            <div class="field"><label>Slogan</label><input id="f-tagline" type="text" placeholder="Le vrai goût, depuis 2008"/></div>
-          </div>
-          <div class="field-row">
-            <div class="field"><label>Titre accueil ligne 1</label><input id="f-hero1" type="text" placeholder="snack"/></div>
-            <div class="field"><label>Titre accueil ligne 2 (couleur)</label><input id="f-hero2" type="text" placeholder="qui fait la diff."/></div>
-          </div>
-          <div class="field-row full">
-            <div class="field"><label>Sous-titre accueil</label><textarea id="f-herosub" rows="2"></textarea></div>
-          </div>
-          <div class="field-row">
-            <div class="field"><label>Badge flottant 1 🔥</label><input id="f-herobadge1" type="text" placeholder="Tout chaud, tout frais"/></div>
-            <div class="field"><label>Badge flottant 2 ⭐</label><input id="f-herobadge2" type="text" placeholder="4.8 · 320 avis"/></div>
-          </div>
-        </div>
+    <!-- LEFT PANEL -->
+    <div class="panel">
+      <div class="panel-tabs" id="panel-tabs">
+        <button class="ptab active" onclick="switchTab('hero',this)">🏠 Hero</button>
+        <button class="ptab" onclick="switchTab('menu',this)">🥙 Menu</button>
+        <button class="ptab" onclick="switchTab('composer',this)">🧩 Composer</button>
+        <button class="ptab" onclick="switchTab('apropos',this)">📖 À propos</button>
+        <button class="ptab" onclick="switchTab('avis',this)">⭐ Avis</button>
+        <button class="ptab" onclick="switchTab('footer',this)">📍 Footer</button>
+        <button class="ptab" onclick="switchTab('photos',this)">📸 Photos</button>
       </div>
+      <div class="panel-body">
 
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">📊</div>
-          <div><h2>Stats accueil</h2><small>3 chiffres affichés sous les boutons</small></div>
-        </div>
-        <div class="card-body">
-          <div id="stats-grid" style="display:flex;flex-direction:column;gap:10px"></div>
-        </div>
-      </div>
+        <!-- ── HERO ── -->
+        <div id="tab-hero">
+          <div class="sec-label">🔤 Navigation</div>
+          <div class="frow c2">
+            <div class="f"><label>Nom du snack</label><input id="f-name" type="text" placeholder="Snack Bosphore" oninput="liveUpdate()"/></div>
+            <div class="f"><label>Slogan</label><input id="f-tagline" type="text" placeholder="Le vrai goût…" oninput="liveUpdate()"/></div>
+          </div>
 
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">🍽️</div>
-          <div><h2>Titres des sections</h2><small>Textes des grandes sections du site</small></div>
-        </div>
-        <div class="card-body">
-          <div class="field-row">
-            <div class="field"><label>Titre section Menu</label><input id="f-menu-title" type="text" placeholder="Choisis ton kiff."/></div>
-            <div class="field"><label>Titre section Composer</label><input id="f-compose-title" type="text" placeholder="Compose ton kebab."/></div>
+          <div class="sec-label">🦸 Hero — Textes</div>
+          <div class="frow c2">
+            <div class="f"><label>Titre ligne 1</label><input id="f-hero1" type="text" placeholder="snack" oninput="liveUpdate()"/></div>
+            <div class="f"><label>Titre ligne 2 (rouge)</label><input id="f-hero2" type="text" placeholder="qui fait la diff." oninput="liveUpdate()"/></div>
           </div>
-          <div class="field-row">
-            <div class="field"><label>Sous-titre Composer</label><input id="f-compose-sub" type="text" placeholder="5 étapes, ton kebab parfait."/></div>
-            <div class="field"><label>Prix de base (Composer)</label><input id="f-compose-price" type="text" placeholder="7,50 €"/></div>
+          <div class="frow">
+            <div class="f"><label>Sous-titre</label><textarea id="f-herosub" rows="2" oninput="liveUpdate()"></textarea></div>
           </div>
-          <div class="field-row full">
-            <div class="field"><label>Texte footer (sous le nom)</label><input id="f-footer-tagline" type="text" placeholder="Le vrai goût, depuis 2008. Une bouchée et tu comprends."/></div>
-          </div>
-        </div>
-      </div>
 
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">🏷️</div>
-          <div><h2>Noms des catégories menu</h2><small>Onglets affichés dans la carte</small></div>
-        </div>
-        <div class="card-body">
-          <div class="field-row">
-            <div class="field"><label>Catégorie 1</label><input id="f-cat-kebabs" type="text" placeholder="Kebabs"/></div>
-            <div class="field"><label>Catégorie 2</label><input id="f-cat-burgers" type="text" placeholder="Burgers"/></div>
+          <div class="sec-label">🏷️ Badges flottants</div>
+          <div class="frow c2">
+            <div class="f"><label>Badge 🔥 (haut droite)</label><input id="f-herobadge1" type="text" placeholder="Tout chaud, tout frais" oninput="liveUpdate()"/></div>
+            <div class="f"><label>Badge ⭐ (bas gauche)</label><input id="f-herobadge2" type="text" placeholder="4.8 · 320 avis" oninput="liveUpdate()"/></div>
           </div>
-          <div class="field-row">
-            <div class="field"><label>Catégorie 3</label><input id="f-cat-tacos" type="text" placeholder="Tacos"/></div>
-            <div class="field"><label>Catégorie 4</label><input id="f-cat-sides" type="text" placeholder="Sides"/></div>
-          </div>
-        </div>
-      </div>
 
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">📍</div>
-          <div><h2>Coordonnées</h2><small>Affichées dans le footer</small></div>
-        </div>
-        <div class="card-body">
-          <div class="field-row">
-            <div class="field"><label>Adresse</label><textarea id="f-address" rows="2" placeholder="12 rue des Halles&#10;75001 Paris"></textarea></div>
-            <div class="field"><label>Téléphone</label><input id="f-phone" type="tel" placeholder="01 23 45 67 89"/></div>
-          </div>
-        </div>
-      </div>
+          <div class="sec-label">📊 Statistiques</div>
+          <div id="stats-grid"></div>
 
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">📖</div>
-          <div><h2>À propos</h2><small>Histoire du snack</small></div>
-        </div>
-        <div class="card-body">
-          <div class="field-row full">
-            <div class="field"><label>Titre</label><input id="f-about-title" type="text" placeholder="Une recette, une famille, une obsession."/></div>
+          <div class="sec-label">📸 Photo hero</div>
+          <div class="photo-slot">
+            <div class="photo-preview" id="hero-preview">🖼️</div>
+            <div class="photo-actions">
+              <input type="url" class="photo-url" id="hero-url" placeholder="https://..." oninput="setPhoto('hero',this.value);liveUpdate()"/>
+              <label class="upload-btn" for="hero-file">📁<input type="file" id="hero-file" accept="image/*" style="display:none" onchange="uploadPhoto('hero',this)"/></label>
+            </div>
           </div>
-          <div class="field-row full">
-            <div class="field"><label>Texte</label><textarea id="f-about-text" rows="4" placeholder="Votre histoire…"></textarea></div>
-          </div>
-          <div style="margin-top:8px">
-            <div class="field" style="margin-bottom:12px"><label>Badges (4 points forts)</label></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="badges-grid"></div>
-          </div>
-        </div>
-      </div>
 
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">📢</div>
-          <div><h2>Bandeau défilant</h2><small>Messages affichés sous le hero</small></div>
-        </div>
-        <div class="card-body">
+          <div class="sec-label">📢 Bandeau défilant</div>
           <div id="marquee-list"></div>
           <button class="btn-add" onclick="addMarqueeItem()">+ Ajouter un message</button>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">📱</div>
-          <div><h2>Réseaux sociaux</h2><small>Liens affichés dans le footer</small></div>
-        </div>
-        <div class="card-body">
-          <div id="social-list"></div>
-          <button class="btn-add" onclick="addSocialLink()">+ Ajouter un réseau</button>
-        </div>
-      </div>
+        <!-- ── MENU ── -->
+        <div id="tab-menu" style="display:none">
+          <div class="sec-label">🔤 Titre de la section</div>
+          <div class="frow">
+            <div class="f"><label>Titre</label><input id="f-menu-title" type="text" placeholder="Choisis ton kiff." oninput="liveUpdate()"/></div>
+          </div>
 
-    </div>
+          <div class="sec-label">🏷️ Noms des catégories</div>
+          <div class="frow c2">
+            <div class="f"><label>Catégorie 1</label><input id="f-cat-kebabs" type="text" placeholder="Kebabs" oninput="liveUpdate()"/></div>
+            <div class="f"><label>Catégorie 2</label><input id="f-cat-burgers" type="text" placeholder="Burgers" oninput="liveUpdate()"/></div>
+          </div>
+          <div class="frow c2">
+            <div class="f"><label>Catégorie 3</label><input id="f-cat-tacos" type="text" placeholder="Tacos" oninput="liveUpdate()"/></div>
+            <div class="f"><label>Catégorie 4</label><input id="f-cat-sides" type="text" placeholder="Sides" oninput="liveUpdate()"/></div>
+          </div>
 
-    <!-- HORAIRES -->
-    <div id="tab-horaires" style="display:none">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">🕐</div>
-          <div><h2>Horaires d'ouverture</h2><small>Affichés dans le footer du site</small></div>
-        </div>
-        <div class="card-body">
-          <div class="hor-grid" id="hor-grid"></div>
-          <button class="btn-add" onclick="addHoraire()">+ Ajouter une ligne</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- MENU -->
-    <div id="tab-menu" style="display:none">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">🥙</div>
-          <div><h2>Carte</h2><small>Plats, prix et descriptions</small></div>
-        </div>
-        <div class="card-body">
+          <div class="sec-label">🥙 Plats</div>
           <div class="cat-tabs" id="cat-tabs"></div>
           <div id="menu-items"></div>
           <button class="btn-add" onclick="addItem()">+ Ajouter un plat</button>
         </div>
-      </div>
-    </div>
 
-    <!-- PHOTOS -->
-    <div id="tab-photos" style="display:none">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">🖼️</div>
-          <div><h2>Photo principale (Hero)</h2><small>Grande image affichée en haut du site</small></div>
-        </div>
-        <div class="card-body">
-          <div id="hero-preview"></div>
-          <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin-top:8px">
-            <div class="field">
-              <label>URL de l'image</label>
-              <input type="url" id="hero-url" placeholder="https://..." oninput="setPhoto('hero',this.value)"/>
-            </div>
-            <label class="upload-btn" for="hero-file" title="Uploader depuis votre appareil">📁 Uploader
-              <input type="file" id="hero-file" accept="image/*" style="display:none" onchange="uploadPhoto('hero',this)"/>
-            </label>
+        <!-- ── COMPOSER ── -->
+        <div id="tab-composer" style="display:none">
+          <div class="sec-label">🔤 Textes</div>
+          <div class="frow">
+            <div class="f"><label>Titre</label><input id="f-compose-title" type="text" placeholder="Compose ton kebab." oninput="liveUpdate()"/></div>
           </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">📸</div>
-          <div><h2>Photos À propos</h2><small>3 photos dans la section histoire</small></div>
-        </div>
-        <div class="card-body">
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px" id="about-photos-grid"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">🍽️</div>
-          <div><h2>Photos des catégories</h2><small>Une photo par catégorie du menu</small></div>
-        </div>
-        <div class="card-body">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="menu-photos-grid"></div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /content -->
-
-    <!-- AVIS -->
-    <div id="tab-avis" style="display:none">
-
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">🔗</div>
-          <div><h2>Google Reviews</h2><small>Lien automatique vers vos vrais avis</small></div>
-        </div>
-        <div class="card-body">
-          <div class="field-row">
-            <div class="field">
-              <label>Google Place ID</label>
-              <input type="text" id="f-place-id" placeholder="Ex: ChIJN1t_tDeuEmsRUsoyG83frY4"
-                oninput="D.googlePlaceId=this.value"/>
-              <span style="font-size:11px;color:rgba(0,0,0,.4);margin-top:4px;display:block">
-                Trouve-le sur <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" style="color:#e63946">Google Place ID Finder ↗</a>
-              </span>
-            </div>
-            <div class="field">
-              <label>Titre de la section</label>
-              <input type="text" id="f-reviews-title" placeholder="Ex: 4.8 sur 320 avis."
-                oninput="D.reviewsTitle=this.value"/>
-            </div>
+          <div class="frow c2">
+            <div class="f"><label>Sous-titre</label><input id="f-compose-sub" type="text" placeholder="5 étapes, ton kebab parfait." oninput="liveUpdate()"/></div>
+            <div class="f"><label>Prix de base</label><input id="f-compose-price" type="text" placeholder="7,50 €" oninput="liveUpdate()"/></div>
           </div>
-          <div style="background:#f5f9ff;border:1px solid #dbeafe;border-radius:8px;padding:14px;font-size:13px;color:#1e40af;margin-top:8px">
-            💡 Entre ton Place ID → un bouton "Voir tous les avis Google" apparaît sur le site.
-          </div>
+          <div class="info-box">💡 Les étapes du composer (pain, viande, sauces…) se gèrent dans l'onglet <strong>Menu</strong> de l'ancien admin. Cette section arrive bientôt.</div>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon">✍️</div>
-          <div><h2>Avis manuels</h2><small>Copiez vos meilleurs avis Google / TripAdvisor</small></div>
+        <!-- ── À PROPOS ── -->
+        <div id="tab-apropos" style="display:none">
+          <div class="sec-label">🔤 Textes</div>
+          <div class="frow">
+            <div class="f"><label>Titre</label><input id="f-about-title" type="text" placeholder="Une recette, une famille…" oninput="liveUpdate()"/></div>
+          </div>
+          <div class="frow">
+            <div class="f"><label>Texte</label><textarea id="f-about-text" rows="3" oninput="liveUpdate()"></textarea></div>
+          </div>
+
+          <div class="sec-label">🏅 4 badges</div>
+          <div class="badge-grid" id="badges-grid"></div>
+
+          <div class="sec-label">📸 3 photos</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px" id="about-photos-grid"></div>
         </div>
-        <div class="card-body">
+
+        <!-- ── AVIS ── -->
+        <div id="tab-avis" style="display:none">
+          <div class="sec-label">🔗 Google Reviews</div>
+          <div class="frow c2">
+            <div class="f"><label>Google Place ID</label><input id="f-place-id" type="text" placeholder="ChIJ…" oninput="D.googlePlaceId=this.value;liveUpdate()"/></div>
+            <div class="f"><label>Titre section</label><input id="f-reviews-title" type="text" placeholder="4.8 sur 320 avis." oninput="D.reviewsTitle=this.value;liveUpdate()"/></div>
+          </div>
+          <div class="sec-label">✍️ Avis manuels</div>
           <div id="reviews-list"></div>
           <button class="btn-add" onclick="addReview()">+ Ajouter un avis</button>
         </div>
-      </div>
 
+        <!-- ── FOOTER ── -->
+        <div id="tab-footer" style="display:none">
+          <div class="sec-label">📍 Coordonnées</div>
+          <div class="frow c2">
+            <div class="f"><label>Adresse</label><textarea id="f-address" rows="2" oninput="liveUpdate()"></textarea></div>
+            <div class="f"><label>Téléphone</label><input id="f-phone" type="tel" oninput="liveUpdate()"/></div>
+          </div>
+          <div class="frow">
+            <div class="f"><label>Texte sous le nom</label><input id="f-footer-tagline" type="text" placeholder="Le vrai goût… Une bouchée et tu comprends." oninput="liveUpdate()"/></div>
+          </div>
+
+          <div class="sec-label">🕐 Horaires</div>
+          <div class="hor-grid" id="hor-grid"></div>
+          <button class="btn-add" onclick="addHoraire()">+ Ajouter une ligne</button>
+
+          <div class="sec-label">📱 Réseaux sociaux</div>
+          <div id="social-list"></div>
+          <button class="btn-add" onclick="addSocialLink()">+ Ajouter un réseau</button>
+        </div>
+
+        <!-- ── PHOTOS ── -->
+        <div id="tab-photos" style="display:none">
+          <div class="sec-label">📸 Photos des catégories menu</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="menu-photos-grid"></div>
+        </div>
+
+      </div><!-- /panel-body -->
+    </div><!-- /panel -->
+
+    <!-- RIGHT PREVIEW -->
+    <div class="preview-area">
+      <div class="preview-toolbar">
+        <input class="preview-url" value="/" readonly/>
+        <button onclick="reloadPreview()" style="padding:5px 10px;border-radius:5px;border:0;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);font:inherit;font-size:11px;cursor:pointer">↺ Refresh</button>
+      </div>
+      <div class="preview-wrap" id="preview-wrap">
+        <iframe id="preview-iframe" class="iframe-desktop" src="/" title="Aperçu du site"></iframe>
+      </div>
     </div>
 
+  </div><!-- /editor -->
 </div><!-- /app -->
 
 <div class="toast" id="toast"></div>
@@ -401,71 +335,75 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
 <script>
 let adminPassword = '';
 let activeCat = 'kebabs';
+let currentDevice = 'desktop';
+let liveUpdateTimer = null;
 const CAT_LABELS = { kebabs:'🥙 Kebabs', burgers:'🍔 Burgers', tacos:'🌮 Tacos', sides:'🍟 Sides' };
 
 let D = {
   name:'Snack Bosphore', tagline:'Le vrai goût, depuis 2008',
   heroTitle1:'snack', heroTitle2:'qui fait la diff.',
   heroSub:'Viande grillée minute, pain maison cuit sur place, sauces fait-maison. Livraison en 30 min ou à emporter — tu choisis.',
+  heroBadge1:'Tout chaud, tout frais', heroBadge2:'4.8 · 320 avis',
+  heroStats:[
+    {v:'4.8', l:'Note moyenne', sub:'5 étoiles'},
+    {v:'12k+', l:'Kebabs servis', sub:'Cette année'},
+    {v:'30min', l:'Livraison', sub:'Garanti ou offert'},
+  ],
   aboutTitle:'Une recette, une famille, une obsession.',
   aboutText:'Depuis 2008, on broche notre viande chaque matin, on pétrit notre pain à la main et on fait nos sauces sur place.',
   aboutBadges:[
-    {k:'Halal',      v:'Certifié AVS'},
-    {k:'Maison',     v:'Pain & sauces'},
-    {k:'Frais',      v:'Livré chaque matin'},
-    {k:'0 surgelé',  v:'Tout cuisiné minute'},
+    {k:'Halal', v:'Certifié AVS'},
+    {k:'Maison', v:'Pain & sauces'},
+    {k:'Frais', v:'Livré chaque matin'},
+    {k:'0 surgelé', v:'Tout cuisiné minute'},
   ],
   address:'12 rue des Halles\n75001 Paris', phone:'01 23 45 67 89',
   horaires:[
     {jour:'Lun – Jeu', ouverture:'11:30', fermeture:'22:30', ferme:false},
     {jour:'Ven – Sam', ouverture:'11:30', fermeture:'00:00', ferme:false},
-    {jour:'Dim',       ouverture:'12:00', fermeture:'22:00', ferme:false},
+    {jour:'Dim', ouverture:'12:00', fermeture:'22:00', ferme:false},
+  ],
+  menuTitle:'Choisis ton kiff.',
+  composeTitle:'Compose ton kebab.', composeSub:'', composePrice:'7,50 €',
+  footerTagline:'',
+  catLabels:{ kebabs:'', burgers:'', tacos:'', sides:'' },
+  googlePlaceId:'', reviewsTitle:'4.8 sur 320 avis.',
+  marqueeItems:['🔥 Menu midi à 9,90€','★ Livraison 30 min ou offerte','🌶️ Nouveau · Tacos XXL','🥙 Halal · 100% maison','🚀 -10% sur ta 1re commande'],
+  socialLinks:[{label:'IG',url:''},{label:'TT',url:''},{label:'FB',url:''}],
+  reviews:[
+    {n:'Marwan', d:'@marwan_eats', t:'Le kebab du quartier. Vraiment. Le pain est cuit minute, ça change tout.', s:5},
+    {n:'Léa', d:'Cliente régulière', t:'La sauce algérienne maison vaut le détour. Et la livraison en 25 min, top.', s:5},
+    {n:'Karim', d:'Avis Google', t:"11€ l'assiette XL, copieux et bien servi. Mes potes en redemandent.", s:4},
   ],
   menu:{
     kebabs:[
-      {id:'k1',name:'Kebab Classique', desc:'Pain pita, viande de veau, salade, tomate, oignon, sauce blanche',price:7.5, tag:'Best-seller'},
-      {id:'k2',name:'Kebab Galette',   desc:'Galette grillée, viande de poulet, crudités, sauce algérienne',   price:8,   tag:'Épicé'},
-      {id:'k3',name:'Kebab Assiette',  desc:'Frites maison, viande, salade, sauces au choix',                  price:11,  tag:'XL'},
-      {id:'k4',name:'Kebab Falafel',   desc:'Pita, falafels maison, houmous, crudités, sauce yaourt',          price:7,   tag:'Végé'},
+      {id:'k1',name:'Kebab Classique', desc:'Pain pita, viande de veau, salade, tomate, oignon, sauce blanche',price:7.5,tag:'Best-seller'},
+      {id:'k2',name:'Kebab Galette', desc:'Galette grillée, viande de poulet, crudités, sauce algérienne',price:8,tag:'Épicé'},
+      {id:'k3',name:'Kebab Assiette', desc:'Frites maison, viande, salade, sauces au choix',price:11,tag:'XL'},
+      {id:'k4',name:'Kebab Falafel', desc:'Pita, falafels maison, houmous, crudités, sauce yaourt',price:7,tag:'Végé'},
     ],
     burgers:[
-      {id:'b1',name:'Cheese Snack',   desc:'Steak haché, cheddar, oignons confits, sauce maison',              price:8.5, tag:''},
-      {id:'b2',name:'Double Bacon',   desc:'Double steak, bacon grillé, cheddar fondu, salade',                price:10.5,tag:''},
-      {id:'b3',name:'Chicken Crispy', desc:'Poulet pané croustillant, coleslaw, sauce barbecue',               price:9,   tag:''},
+      {id:'b1',name:'Cheese Snack', desc:'Steak haché, cheddar, oignons confits, sauce maison',price:8.5,tag:''},
+      {id:'b2',name:'Double Bacon', desc:'Double steak, bacon grillé, cheddar fondu, salade',price:10.5,tag:''},
+      {id:'b3',name:'Chicken Crispy', desc:'Poulet pané croustillant, coleslaw, sauce barbecue',price:9,tag:''},
     ],
     tacos:[
-      {id:'t1',name:'Tacos M',  desc:'1 viande, frites, fromage fondu, sauce', price:7,  tag:''},
-      {id:'t2',name:'Tacos L',  desc:'2 viandes, frites, fromage fondu, sauce',price:9,  tag:''},
-      {id:'t3',name:'Tacos XL', desc:'3 viandes, frites, double fromage, sauce',price:11, tag:''},
+      {id:'t1',name:'Tacos M', desc:'1 viande, frites, fromage fondu, sauce',price:7,tag:''},
+      {id:'t2',name:'Tacos L', desc:'2 viandes, frites, fromage fondu, sauce',price:9,tag:''},
+      {id:'t3',name:'Tacos XL', desc:'3 viandes, frites, double fromage, sauce',price:11,tag:''},
     ],
     sides:[
-      {id:'s1',name:'Frites maison',   desc:'Coupées sur place, double cuisson',    price:3.5,tag:''},
-      {id:'s2',name:'Nuggets x6',      desc:'Poulet pané, sauce au choix',           price:4.5,tag:''},
-      {id:'s3',name:'Onion rings',     desc:'6 pièces, sauce barbecue',              price:4,  tag:''},
-      {id:'s4',name:'Mozza sticks x4', desc:'Bâtonnets de mozza panés, sauce tomate',price:5, tag:''},
+      {id:'s1',name:'Frites maison', desc:'Coupées sur place, double cuisson',price:3.5,tag:''},
+      {id:'s2',name:'Nuggets x6', desc:'Poulet pané, sauce au choix',price:4.5,tag:''},
+      {id:'s3',name:'Onion rings', desc:'6 pièces, sauce barbecue',price:4,tag:''},
+      {id:'s4',name:'Mozza sticks x4', desc:'Bâtonnets de mozza panés, sauce tomate',price:5,tag:''},
     ],
   },
-  googlePlaceId: '',
-  reviewsTitle: '4.8 sur 320 avis.',
-  marqueeItems: ['🔥 Menu midi à 9,90€', '★ Livraison 30 min ou offerte', '🌶️ Nouveau · Tacos XXL', '🥙 Halal · 100% maison', '🚀 -10% sur ta 1re commande'],
-  socialLinks: [
-    { label: 'IG', url: '' },
-    { label: 'TT', url: '' },
-    { label: 'FB', url: '' },
-  ],
-  reviews: [
-    {n:'Marwan', d:'@marwan_eats', t:'Le kebab du quartier. Vraiment. Le pain est cuit minute, ça change tout.', s:5, source:'google'},
-    {n:'Léa', d:'Cliente régulière', t:'La sauce algérienne maison vaut le détour. Et la livraison en 25 min, top.', s:5, source:'google'},
-    {n:'Karim', d:'Avis Google', t:"11€ l'assiette XL, copieux et bien servi. Mes potes en redemandent.", s:4, source:'google'},
-  ],
-  photos: {
-    hero: '',
-    about: ['', '', ''],
-    menu: { kebabs:'', burgers:'', tacos:'', sides:'' }
-  }
+  compose:[],
+  photos:{ hero:'', about:['','',''], menu:{kebabs:'',burgers:'',tacos:'',sides:''} }
 };
 
-// LOGIN
+// ── LOGIN ──
 async function tryLogin() {
   const pwd = document.getElementById('pwd').value.trim();
   if (!pwd) return;
@@ -475,29 +413,101 @@ async function tryLogin() {
       body: JSON.stringify({password:pwd, checkOnly:true})
     });
     if (r.status === 401) { document.getElementById('lerr').style.display='block'; return; }
-  } catch(e) { /* dev local, on passe */ }
+  } catch(e) {}
   adminPassword = pwd;
   document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
+  document.getElementById('app').style.display = 'flex';
   await loadData();
 }
 document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
 
-// LOAD
+// ── LOAD ──
 async function loadData() {
   try {
     const r = await fetch('/api/get-menu');
     const data = await r.json();
     if (data && typeof data === 'object' && Object.keys(data).length > 0) {
-      // Remplace complètement D par les données sauvegardées
-      // On garde les défauts uniquement pour les clés absentes
       D = { ...D, ...data };
     }
-  } catch(e) { console.warn('Chargement échoué, données par défaut'); }
-  fillForms(); renderHoraires(); renderMenuCats(); renderMenuItems();
+  } catch(e) { console.warn('Chargement échoué'); }
+  fillForms();
+  renderAll();
 }
 
-// FORMS
+// ── LIVE UPDATE — envoie D à l'iframe via postMessage ──
+function liveUpdate() {
+  clearTimeout(liveUpdateTimer);
+  liveUpdateTimer = setTimeout(() => {
+    readForms();
+    const iframe = document.getElementById('preview-iframe');
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage({ type: 'ADMIN_UPDATE', data: D }, '*');
+    }
+  }, 300);
+}
+
+function reloadPreview() {
+  const iframe = document.getElementById('preview-iframe');
+  iframe.src = iframe.src;
+  iframe.onload = () => {
+    setTimeout(() => {
+      readForms();
+      iframe.contentWindow.postMessage({ type: 'ADMIN_UPDATE', data: D }, '*');
+    }, 500);
+  };
+}
+
+// ── DEVICE TOGGLE ──
+function setDevice(device) {
+  currentDevice = device;
+  const wrap = document.getElementById('preview-wrap');
+  const iframe = document.getElementById('preview-iframe');
+  document.getElementById('btn-desktop').classList.toggle('active', device==='desktop');
+  document.getElementById('btn-mobile').classList.toggle('active', device==='mobile');
+  if (device === 'desktop') {
+    wrap.style.padding = '0';
+    iframe.className = 'iframe-desktop';
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.borderRadius = '0';
+  } else {
+    wrap.style.padding = '24px';
+    wrap.style.background = '#1a1a1a';
+    iframe.className = 'iframe-mobile';
+    iframe.style.width = '390px';
+    iframe.style.height = '844px';
+    iframe.style.borderRadius = '40px';
+    iframe.style.boxShadow = '0 20px 60px rgba(0,0,0,.6)';
+  }
+  setTimeout(liveUpdate, 100);
+}
+
+// ── TABS ──
+function switchTab(tab, btn) {
+  ['hero','menu','composer','apropos','avis','footer','photos'].forEach(t =>
+    document.getElementById('tab-'+t).style.display = t===tab?'block':'none'
+  );
+  document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Scroll iframe to matching section
+  const sectionMap = {
+    hero: 'hero', menu: 'Menu', composer: 'Composer',
+    apropos: 'À propos', avis: null, footer: 'Contact', photos: null
+  };
+  const section = sectionMap[tab];
+  if (section) {
+    const iframe = document.getElementById('preview-iframe');
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage({ type: 'SCROLL_TO', section }, '*');
+    }
+  }
+
+  if (tab === 'photos') renderPhotos();
+  if (tab === 'avis') renderReviews();
+}
+
+// ── FILL FORMS ──
 function fillForms() {
   const s = (id, v) => { const el = document.getElementById(id); if(el) el.value = v||''; };
   s('f-name', D.name); s('f-tagline', D.tagline);
@@ -506,83 +516,21 @@ function fillForms() {
   s('f-herobadge1', D.heroBadge1||''); s('f-herobadge2', D.heroBadge2||'');
   s('f-address', D.address); s('f-phone', D.phone);
   s('f-about-title', D.aboutTitle); s('f-about-text', D.aboutText);
-  s('f-menu-title', D.menuTitle||''); s('f-compose-title', D.composeTitle||'');
-  s('f-compose-sub', D.composeSub||''); s('f-compose-price', D.composePrice||'');
+  s('f-menu-title', D.menuTitle||'');
+  s('f-compose-title', D.composeTitle||'');
+  s('f-compose-sub', D.composeSub||'');
+  s('f-compose-price', D.composePrice||'');
   s('f-footer-tagline', D.footerTagline||'');
   s('f-cat-kebabs', (D.catLabels||{}).kebabs||'');
   s('f-cat-burgers', (D.catLabels||{}).burgers||'');
   s('f-cat-tacos', (D.catLabels||{}).tacos||'');
   s('f-cat-sides', (D.catLabels||{}).sides||'');
+  s('f-place-id', D.googlePlaceId||'');
+  s('f-reviews-title', D.reviewsTitle||'');
+  if (D.photos && D.photos.hero) s('hero-url', D.photos.hero);
+  renderPhotoPreview('hero-preview', (D.photos||{}).hero||'');
   document.getElementById('tb-name').textContent = D.name||'';
   document.getElementById('tb-letter').textContent = (D.name||'S')[0].toUpperCase();
-  renderBadges(); renderStats(); renderMarquee(); renderSocial();
-}
-
-// MARQUEE
-function renderMarquee() {
-  if (!D.marqueeItems) D.marqueeItems = [];
-  const list = document.getElementById('marquee-list');
-  if (!list) return;
-  list.innerHTML = '';
-  D.marqueeItems.forEach((item, i) => {
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px';
-    row.innerHTML = `
-      <input class="mi-input" style="flex:1" value="${esc(item)}" placeholder="Ex: 🔥 Menu midi à 9,90€"
-        oninput="D.marqueeItems[${i}]=this.value"/>
-      <button class="btn-del-row" onclick="D.marqueeItems.splice(${i},1);renderMarquee()" title="Supprimer">✕</button>
-    `;
-    list.appendChild(row);
-  });
-}
-function addMarqueeItem() {
-  if (!D.marqueeItems) D.marqueeItems = [];
-  D.marqueeItems.push('');
-  renderMarquee();
-}
-
-// SOCIAL
-const SOCIAL_ICONS = { IG:'Instagram', TT:'TikTok', FB:'Facebook', YT:'YouTube', TW:'Twitter/X', LN:'LinkedIn' };
-function renderSocial() {
-  if (!D.socialLinks) D.socialLinks = [];
-  const list = document.getElementById('social-list');
-  if (!list) return;
-  list.innerHTML = '';
-  D.socialLinks.forEach((s, i) => {
-    const row = document.createElement('div');
-    row.style.cssText = 'display:grid;grid-template-columns:90px 1fr auto;gap:8px;align-items:center;margin-bottom:8px';
-    row.innerHTML = `
-      <input class="mi-input" value="${esc(s.label||'')}" placeholder="Ex: IG"
-        oninput="D.socialLinks[${i}].label=this.value"/>
-      <input class="mi-input" type="url" value="${esc(s.url||'')}" placeholder="https://instagram.com/..."
-        oninput="D.socialLinks[${i}].url=this.value"/>
-      <button class="btn-del-row" onclick="D.socialLinks.splice(${i},1);renderSocial()" title="Supprimer">✕</button>
-    `;
-    list.appendChild(row);
-  });
-}
-function addSocialLink() {
-  if (!D.socialLinks) D.socialLinks = [];
-  D.socialLinks.push({ label: '', url: '' });
-  renderSocial();
-}
-
-function renderBadges() {
-  if (!D.aboutBadges) D.aboutBadges = [{k:'',v:''},{k:'',v:''},{k:'',v:''},{k:'',v:''}];
-  const grid = document.getElementById('badges-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
-  D.aboutBadges.forEach((b, i) => {
-    const div = document.createElement('div');
-    div.style.cssText = 'background:#fafaf7;border:1px solid rgba(0,0,0,.07);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px';
-    div.innerHTML = `
-      <input class="mi-input" value="${esc(b.k)}" placeholder="Ex: Halal"
-        oninput="D.aboutBadges[${i}].k=this.value" style="font-weight:600"/>
-      <input class="mi-input" value="${esc(b.v)}" placeholder="Ex: Certifié AVS"
-        oninput="D.aboutBadges[${i}].v=this.value"/>
-    `;
-    grid.appendChild(div);
-  });
 }
 
 function readForms() {
@@ -593,8 +541,10 @@ function readForms() {
   D.heroBadge1 = g('f-herobadge1'); D.heroBadge2 = g('f-herobadge2');
   D.address = g('f-address'); D.phone = g('f-phone');
   D.aboutTitle = g('f-about-title'); D.aboutText = g('f-about-text');
-  D.menuTitle = g('f-menu-title'); D.composeTitle = g('f-compose-title');
-  D.composeSub = g('f-compose-sub'); D.composePrice = g('f-compose-price');
+  D.menuTitle = g('f-menu-title');
+  D.composeTitle = g('f-compose-title');
+  D.composeSub = g('f-compose-sub');
+  D.composePrice = g('f-compose-price');
   D.footerTagline = g('f-footer-tagline');
   D.catLabels = {
     kebabs: g('f-cat-kebabs'), burgers: g('f-cat-burgers'),
@@ -604,62 +554,106 @@ function readForms() {
   document.getElementById('tb-letter').textContent = (D.name||'S')[0].toUpperCase();
 }
 
-// STATS
+function renderAll() {
+  renderStats(); renderMarquee(); renderBadges();
+  renderHoraires(); renderSocial();
+  renderMenuCats(); renderMenuItems();
+}
+
+// ── STATS ──
 function renderStats() {
-  if (!D.heroStats) D.heroStats = [
-    {v:'4.8', l:'Note moyenne', sub:'5 étoiles'},
-    {v:'12k+', l:'Kebabs servis', sub:'Cette année'},
-    {v:'30min', l:'Livraison', sub:'Garanti ou offert'},
-  ];
+  if (!D.heroStats) D.heroStats = [{v:'4.8',l:'Note moyenne',sub:'5 étoiles'},{v:'12k+',l:'Kebabs servis',sub:'Cette année'},{v:'30min',l:'Livraison',sub:'Garanti ou offert'}];
   const grid = document.getElementById('stats-grid');
   if (!grid) return;
   grid.innerHTML = '';
   D.heroStats.forEach((st, i) => {
     const div = document.createElement('div');
-    div.style.cssText = 'display:grid;grid-template-columns:80px 1fr 1fr;gap:8px;align-items:center;margin-bottom:8px';
-    div.innerHTML = '<div><div class="mi-label">Valeur</div><input class="mi-input" value="' + (st.v||'') + '" placeholder="4.8" oninput="D.heroStats['+i+'].v=this.value"/></div>'
-      + '<div><div class="mi-label">Label</div><input class="mi-input" value="' + (st.l||'') + '" placeholder="Note moyenne" oninput="D.heroStats['+i+'].l=this.value"/></div>'
-      + '<div><div class="mi-label">Sous-texte</div><input class="mi-input" value="' + (st.sub||'') + '" placeholder="Cette année" oninput="D.heroStats['+i+'].sub=this.value"/></div>';
+    div.className = 'list-item';
+    div.innerHTML = '<div style="display:grid;grid-template-columns:60px 1fr 1fr;gap:6px">'
+      +'<div><div class="mi-label">Valeur</div><input class="mi-input" value="'+esc(st.v||'')+'" placeholder="4.8" oninput="D.heroStats['+i+'].v=this.value;liveUpdate()"/></div>'
+      +'<div><div class="mi-label">Label</div><input class="mi-input" value="'+esc(st.l||'')+'" placeholder="Note" oninput="D.heroStats['+i+'].l=this.value;liveUpdate()"/></div>'
+      +'<div><div class="mi-label">Sous-texte</div><input class="mi-input" value="'+esc(st.sub||'')+'" placeholder="Cette année" oninput="D.heroStats['+i+'].sub=this.value;liveUpdate()"/></div>'
+      +'</div>';
     grid.appendChild(div);
   });
 }
 
-// HORAIRES
+// ── MARQUEE ──
+function renderMarquee() {
+  if (!D.marqueeItems) D.marqueeItems = [];
+  const list = document.getElementById('marquee-list');
+  if (!list) return;
+  list.innerHTML = '';
+  D.marqueeItems.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:6px;align-items:center;margin-bottom:6px';
+    row.innerHTML = '<input class="mi-input" style="flex:1" value="'+esc(item)+'" placeholder="🔥 Message…" oninput="D.marqueeItems['+i+']=this.value;liveUpdate()"/>'
+      +'<button class="btn-del" onclick="D.marqueeItems.splice('+i+',1);renderMarquee();liveUpdate()" title="Supprimer">✕</button>';
+    list.appendChild(row);
+  });
+}
+function addMarqueeItem() { if(!D.marqueeItems)D.marqueeItems=[]; D.marqueeItems.push(''); renderMarquee(); }
+
+// ── BADGES ──
+function renderBadges() {
+  if (!D.aboutBadges) D.aboutBadges = [{k:'',v:''},{k:'',v:''},{k:'',v:''},{k:'',v:''}];
+  const grid = document.getElementById('badges-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  D.aboutBadges.forEach((b, i) => {
+    const div = document.createElement('div');
+    div.className = 'badge-card';
+    div.innerHTML = '<input class="mi-input" value="'+esc(b.k)+'" placeholder="Halal" style="font-weight:700" oninput="D.aboutBadges['+i+'].k=this.value;liveUpdate()"/>'
+      +'<input class="mi-input" value="'+esc(b.v)+'" placeholder="Certifié AVS" oninput="D.aboutBadges['+i+'].v=this.value;liveUpdate()"/>';
+    grid.appendChild(div);
+  });
+}
+
+// ── SOCIAL ──
+function renderSocial() {
+  if (!D.socialLinks) D.socialLinks = [];
+  const list = document.getElementById('social-list');
+  if (!list) return;
+  list.innerHTML = '';
+  D.socialLinks.forEach((s, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid;grid-template-columns:60px 1fr auto;gap:6px;align-items:center;margin-bottom:6px';
+    row.innerHTML = '<input class="mi-input" value="'+esc(s.label||'')+'" placeholder="IG" oninput="D.socialLinks['+i+'].label=this.value;liveUpdate()"/>'
+      +'<input class="mi-input" type="url" value="'+esc(s.url||'')+'" placeholder="https://instagram.com/…" oninput="D.socialLinks['+i+'].url=this.value;liveUpdate()"/>'
+      +'<button class="btn-del" onclick="D.socialLinks.splice('+i+',1);renderSocial();liveUpdate()">✕</button>';
+    list.appendChild(row);
+  });
+}
+function addSocialLink() { if(!D.socialLinks)D.socialLinks=[]; D.socialLinks.push({label:'',url:''}); renderSocial(); }
+
+// ── HORAIRES ──
 function renderHoraires() {
   const grid = document.getElementById('hor-grid');
+  if (!grid) return;
   grid.innerHTML = '';
-  D.horaires.forEach((h, i) => {
+  (D.horaires||[]).forEach((h, i) => {
     const row = document.createElement('div');
     row.className = 'hor-row';
-    row.innerHTML = `
-      <input class="hor-input" style="text-align:left" value="${esc(h.jour)}" placeholder="Lun – Ven"
-        oninput="D.horaires[${i}].jour=this.value"/>
-      <input class="hor-input" type="time" value="${h.ouverture}" ${h.ferme?'disabled':''}
-        oninput="D.horaires[${i}].ouverture=this.value"/>
-      <input class="hor-input" type="time" value="${h.fermeture}" ${h.ferme?'disabled':''}
-        oninput="D.horaires[${i}].fermeture=this.value"/>
-      <label class="ferme-lbl">
-        <input type="checkbox" ${h.ferme?'checked':''} onchange="toggleFerme(${i},this.checked)"/> Fermé
-      </label>
-      <button class="btn-del-row" onclick="D.horaires.splice(${i},1);renderHoraires()" title="Supprimer">✕</button>
-    `;
+    row.innerHTML = '<input class="hor-input" style="text-align:left" value="'+esc(h.jour)+'" placeholder="Lun – Ven" oninput="D.horaires['+i+'].jour=this.value;liveUpdate()"/>'
+      +'<input class="hor-input" type="time" value="'+h.ouverture+'" '+(h.ferme?'disabled':'')+' oninput="D.horaires['+i+'].ouverture=this.value;liveUpdate()"/>'
+      +'<input class="hor-input" type="time" value="'+h.fermeture+'" '+(h.ferme?'disabled':'')+' oninput="D.horaires['+i+'].fermeture=this.value;liveUpdate()"/>'
+      +'<label class="ferme-lbl"><input type="checkbox" '+(h.ferme?'checked':'')+' onchange="toggleFerme('+i+',this.checked)"/> Fermé</label>'
+      +'<button class="btn-del" onclick="D.horaires.splice('+i+',1);renderHoraires();liveUpdate()">✕</button>';
     grid.appendChild(row);
   });
 }
-function addHoraire() {
-  D.horaires.push({jour:'Nouveau jour', ouverture:'11:00', fermeture:'22:00', ferme:false});
-  renderHoraires();
-}
-function toggleFerme(i, v) { D.horaires[i].ferme = v; renderHoraires(); }
+function addHoraire() { D.horaires.push({jour:'Nouveau jour',ouverture:'11:00',fermeture:'22:00',ferme:false}); renderHoraires(); liveUpdate(); }
+function toggleFerme(i, v) { D.horaires[i].ferme=v; renderHoraires(); liveUpdate(); }
 
-// MENU
+// ── MENU ──
 function renderMenuCats() {
   const tabs = document.getElementById('cat-tabs');
+  if (!tabs) return;
   tabs.innerHTML = '';
   Object.keys(CAT_LABELS).forEach(cat => {
     const btn = document.createElement('button');
-    btn.className = 'cat-tab' + (cat===activeCat?' active':'');
-    btn.innerHTML = `${CAT_LABELS[cat]}<span class="cat-count">· ${(D.menu[cat]||[]).length}</span>`;
+    btn.className = 'cat-tab'+(cat===activeCat?' active':'');
+    btn.innerHTML = CAT_LABELS[cat]+'<span class="cat-count">· '+((D.menu[cat]||[]).length)+'</span>';
     btn.onclick = () => { activeCat=cat; renderMenuCats(); renderMenuItems(); };
     tabs.appendChild(btn);
   });
@@ -667,76 +661,47 @@ function renderMenuCats() {
 
 function renderMenuItems() {
   const c = document.getElementById('menu-items');
+  if (!c) return;
   c.innerHTML = '';
   (D.menu[activeCat]||[]).forEach((item, idx) => {
     const div = document.createElement('div');
     div.className = 'menu-item';
-    div.innerHTML = `
-      <div style="display:grid;grid-template-columns:100px 1fr;gap:14px;align-items:start">
-        <!-- PHOTO -->
-        <div>
-          <div class="mi-label">Photo</div>
-          <div class="item-img-preview" id="item-img-${activeCat}-${idx}"
-            style="width:100%;aspect-ratio:1;border-radius:8px;border:2px dashed rgba(0,0,0,.12);background:#f5f5f5;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:22px;color:rgba(0,0,0,.2);position:relative;cursor:pointer"
-            onclick="document.getElementById('item-file-${activeCat}-${idx}').click()">
-            ${item.image ? `<img src="${esc(item.image)}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"/>` : '🖼️'}
-          </div>
-          <div style="display:flex;gap:4px;margin-top:6px">
-            <label class="upload-btn" style="flex:1;justify-content:center;font-size:11px" title="Uploader">
-              📁
-              <input type="file" id="item-file-${activeCat}-${idx}" accept="image/*" style="display:none"
-                onchange="uploadItemPhoto('${activeCat}',${idx},this)"/>
-            </label>
-          </div>
-          <input type="url" class="mi-input" style="margin-top:4px;font-size:11px" placeholder="ou URL…"
-            value="${esc(item.image||'')}"
-            oninput="setItemPhoto('${activeCat}',${idx},this.value)"/>
-        </div>
-        <!-- INFOS -->
-        <div>
-          <div class="mi-top" style="grid-template-columns:1fr 80px 100px 36px">
-            <div>
-              <div class="mi-label">Nom du plat</div>
-              <input class="mi-input" value="${esc(item.name)}" placeholder="Nom"
-                oninput="D.menu['${activeCat}'][${idx}].name=this.value"/>
-            </div>
-            <div>
-              <div class="mi-label">Prix €</div>
-              <input class="mi-input" type="number" step="0.5" min="0" value="${item.price}"
-                oninput="D.menu['${activeCat}'][${idx}].price=parseFloat(this.value)||0"/>
-            </div>
-            <div>
-              <div class="mi-label">Étiquette</div>
-              <input class="mi-input" value="${esc(item.tag||'')}" placeholder="Épicé…"
-                oninput="D.menu['${activeCat}'][${idx}].tag=this.value"/>
-            </div>
-            <button class="btn-del-item" onclick="deleteItem('${activeCat}',${idx})" title="Supprimer">🗑</button>
-          </div>
-          <div class="mi-desc">
-            <div class="mi-label">Description</div>
-            <textarea class="mi-input" rows="3"
-              oninput="D.menu['${activeCat}'][${idx}].desc=this.value">${esc(item.desc)}</textarea>
-          </div>
-        </div>
-      </div>`;
+    div.innerHTML = '<div style="display:grid;grid-template-columns:80px 1fr;gap:10px;align-items:start">'
+      +'<div>'
+      +'<div class="mi-label">Photo</div>'
+      +'<div id="item-img-'+activeCat+'-'+idx+'" style="width:100%;aspect-ratio:1;border-radius:7px;border:2px dashed rgba(0,0,0,.12);background:#f5f5f5;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px;position:relative;cursor:pointer" onclick="document.getElementById(\'item-file-'+activeCat+'-'+idx+'\').click()">'
+      +(item.image?'<img src="'+esc(item.image)+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>':'🖼️')
+      +'</div>'
+      +'<input type="url" class="mi-input" style="margin-top:4px;font-size:10px" placeholder="URL photo…" value="'+esc(item.image||'')+'" oninput="setItemPhoto(\''+activeCat+'\','+idx+',this.value)"/>'
+      +'<label class="upload-btn" style="margin-top:4px;font-size:10px;width:100%;justify-content:center">📁<input type="file" id="item-file-'+activeCat+'-'+idx+'" accept="image/*" style="display:none" onchange="uploadItemPhoto(\''+activeCat+'\','+idx+',this)"/></label>'
+      +'</div>'
+      +'<div>'
+      +'<div style="display:grid;grid-template-columns:1fr 60px 90px 24px;gap:6px;margin-bottom:6px">'
+      +'<div><div class="mi-label">Nom</div><input class="mi-input" value="'+esc(item.name)+'" oninput="D.menu[\''+activeCat+'\']['+idx+'].name=this.value;liveUpdate()"/></div>'
+      +'<div><div class="mi-label">Prix €</div><input class="mi-input" type="number" step="0.5" min="0" value="'+item.price+'" oninput="D.menu[\''+activeCat+'\']['+idx+'].price=parseFloat(this.value)||0;liveUpdate()"/></div>'
+      +'<div><div class="mi-label">Étiquette</div><input class="mi-input" value="'+esc(item.tag||'')+'" placeholder="Épicé…" oninput="D.menu[\''+activeCat+'\']['+idx+'].tag=this.value;liveUpdate()"/></div>'
+      +'<button class="btn-del-item" onclick="deleteItem(\''+activeCat+'\','+idx+')">🗑</button>'
+      +'</div>'
+      +'<div class="mi-label">Description</div>'
+      +'<textarea class="mi-input" rows="2" oninput="D.menu[\''+activeCat+'\']['+idx+'].desc=this.value;liveUpdate()">'+esc(item.desc)+'</textarea>'
+      +'</div>'
+      +'</div>';
     c.appendChild(div);
   });
 }
 
 function setItemPhoto(cat, idx, url) {
   D.menu[cat][idx].image = url;
-  const preview = document.getElementById(`item-img-${cat}-${idx}`);
+  const preview = document.getElementById('item-img-'+cat+'-'+idx);
   if (!preview) return;
-  preview.innerHTML = url
-    ? `<img src="${esc(url)}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"/>`
-    : '🖼️';
+  preview.innerHTML = url ? '<img src="'+esc(url)+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>' : '🖼️';
+  liveUpdate();
 }
 
 async function uploadItemPhoto(cat, idx, input) {
-  const file = input.files[0];
-  if (!file) return;
-  const preview = document.getElementById(`item-img-${cat}-${idx}`);
-  if (preview) preview.innerHTML = '<div style="font-size:12px;opacity:.5">⏳</div>';
+  const file = input.files[0]; if (!file) return;
+  const preview = document.getElementById('item-img-'+cat+'-'+idx);
+  if (preview) preview.innerHTML = '<div style="font-size:11px;opacity:.5">⏳</div>';
   const url = await doUpload(file);
   if (url) setItemPhoto(cat, idx, url);
 }
@@ -744,230 +709,154 @@ async function uploadItemPhoto(cat, idx, input) {
 function addItem() {
   const id = activeCat[0]+Date.now().toString(36).slice(-4);
   D.menu[activeCat].push({id, name:'Nouveau plat', desc:'Description…', price:8, tag:''});
-  renderMenuCats(); renderMenuItems();
+  renderMenuCats(); renderMenuItems(); liveUpdate();
 }
-function deleteItem(cat, idx) {
-  D.menu[cat].splice(idx,1);
-  renderMenuCats(); renderMenuItems();
-}
+function deleteItem(cat, idx) { D.menu[cat].splice(idx,1); renderMenuCats(); renderMenuItems(); liveUpdate(); }
 
-// TABS
-function switchTab(tab, btn) {
-  ['infos','horaires','menu','photos','avis'].forEach(t =>
-    document.getElementById('tab-'+t).style.display = t===tab?'block':'none'
-  );
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (tab === 'photos') renderPhotos();
-  if (tab === 'avis') renderReviews();
-}
-
-// REVIEWS
+// ── REVIEWS ──
 function renderReviews() {
-  const s = (id, v) => { const el = document.getElementById(id); if(el) el.value = v||''; };
-  s('f-place-id', D.googlePlaceId);
-  s('f-reviews-title', D.reviewsTitle);
-
+  const s = (id, v) => { const el=document.getElementById(id); if(el) el.value=v||''; };
+  s('f-place-id', D.googlePlaceId); s('f-reviews-title', D.reviewsTitle);
   const list = document.getElementById('reviews-list');
   if (!list) return;
   list.innerHTML = '';
-  if (!D.reviews) D.reviews = [];
-  D.reviews.forEach((r, i) => {
+  (D.reviews||[]).forEach((r, i) => {
     const div = document.createElement('div');
-    div.className = 'menu-item';
-    div.style.marginBottom = '12px';
-    div.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div class="mi-label">Avis ${i+1}</div>
-        <button class="btn-del-row" onclick="D.reviews.splice(${i},1);renderReviews()" title="Supprimer">✕</button>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:10px;margin-bottom:8px">
-        <div>
-          <div class="mi-label">Nom</div>
-          <input class="mi-input" value="${esc(r.n||'')}" placeholder="Prénom"
-            oninput="D.reviews[${i}].n=this.value"/>
-        </div>
-        <div>
-          <div class="mi-label">Source</div>
-          <input class="mi-input" value="${esc(r.d||'')}" placeholder="Ex: Google, TripAdvisor…"
-            oninput="D.reviews[${i}].d=this.value"/>
-        </div>
-        <div>
-          <div class="mi-label">Note /5</div>
-          <input class="mi-input" type="number" min="1" max="5" value="${r.s||5}"
-            oninput="D.reviews[${i}].s=parseInt(this.value)||5"/>
-        </div>
-      </div>
-      <div>
-        <div class="mi-label">Texte de l'avis</div>
-        <textarea class="mi-input" rows="2" placeholder="Texte de l'avis…"
-          oninput="D.reviews[${i}].t=this.value">${esc(r.t||'')}</textarea>
-      </div>
-    `;
+    div.className = 'list-item';
+    div.style.marginBottom = '8px';
+    div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="mi-label">Avis '+(i+1)+'</span><button class="btn-del" onclick="D.reviews.splice('+i+',1);renderReviews()">✕</button></div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr 50px;gap:6px;margin-bottom:6px">'
+      +'<div><div class="mi-label">Nom</div><input class="mi-input" value="'+esc(r.n||'')+'" oninput="D.reviews['+i+'].n=this.value;liveUpdate()"/></div>'
+      +'<div><div class="mi-label">Source</div><input class="mi-input" value="'+esc(r.d||'')+'" oninput="D.reviews['+i+'].d=this.value;liveUpdate()"/></div>'
+      +'<div><div class="mi-label">Note</div><input class="mi-input" type="number" min="1" max="5" value="'+(r.s||5)+'" oninput="D.reviews['+i+'].s=parseInt(this.value)||5;liveUpdate()"/></div>'
+      +'</div>'
+      +'<textarea class="mi-input" rows="2" placeholder="Texte de l\'avis…" oninput="D.reviews['+i+'].t=this.value;liveUpdate()">'+esc(r.t||'')+'</textarea>';
     list.appendChild(div);
   });
 }
+function addReview() { if(!D.reviews)D.reviews=[]; D.reviews.push({n:'',d:'Google',t:'',s:5}); renderReviews(); }
 
-function addReview() {
-  if (!D.reviews) D.reviews = [];
-  D.reviews.push({n:'', d:'Google', t:'', s:5, source:'google'});
-  renderReviews();
-}
-
-// PHOTOS
+// ── PHOTOS ──
 function renderPhotos() {
-  if (!D.photos) D.photos = { hero:'', about:['','',''], menu:{kebabs:'',burgers:'',tacos:'',sides:''} };
-
-  // Hero
-  document.getElementById('hero-url').value = D.photos.hero || '';
-  renderPhotoPreview('hero-preview', D.photos.hero);
-
-  // About (3 slots)
-  const ag = document.getElementById('about-photos-grid');
-  ag.innerHTML = '';
-  ['Photo 1','Photo 2','Photo 3'].forEach((label, i) => {
-    ag.appendChild(makePhotoSlot(label, D.photos.about[i]||'', `about-${i}`,
-      v => { D.photos.about[i] = v; renderPhotoPreviewInSlot(`about-${i}`, v); }
-    ));
-  });
-
-  // Menu cats
+  if (!D.photos) D.photos = {hero:'', about:['','',''], menu:{kebabs:'',burgers:'',tacos:'',sides:''}};
   const mg = document.getElementById('menu-photos-grid');
+  if (!mg) return;
   mg.innerHTML = '';
   Object.keys(CAT_LABELS).forEach(cat => {
-    mg.appendChild(makePhotoSlot(CAT_LABELS[cat], D.photos.menu[cat]||'', `menucat-${cat}`,
-      v => { D.photos.menu[cat] = v; renderPhotoPreviewInSlot(`menucat-${cat}`, v); }
-    ));
+    const slot = document.createElement('div');
+    slot.className = 'photo-slot';
+    const url = (D.photos.menu||{})[cat]||'';
+    slot.innerHTML = '<div class="mi-label">'+CAT_LABELS[cat]+'</div>'
+      +'<div class="photo-preview square" id="preview-menucat-'+cat+'">'+(url?'<img src="'+esc(url)+'" alt=""/>':'🖼️')+'</div>'
+      +'<div class="photo-actions">'
+      +'<input type="url" class="photo-url" value="'+esc(url)+'" placeholder="https://…" oninput="updatePhotoUrl(\'menucat-'+cat+'\',this.value)"/>'
+      +'<label class="upload-btn">📁<input type="file" accept="image/*" style="display:none" onchange="uploadPhotoSlot(\'menucat-'+cat+'\',this)"/></label>'
+      +'</div>';
+    mg.appendChild(slot);
   });
-}
-
-function makePhotoSlot(label, url, key, onChange) {
-  const div = document.createElement('div');
-  div.className = 'photo-slot';
-  div.innerHTML = `
-    <div class="mi-label">${label}</div>
-    <div class="photo-preview" id="preview-${key}">
-      ${url ? `<img src="${esc(url)}" alt=""/>` : '🖼️'}
-    </div>
-    <div class="photo-actions">
-      <input type="url" class="photo-url" placeholder="https://..." value="${esc(url)}"
-        oninput="updatePhotoUrl('${key}', this.value)"/>
-      <label class="upload-btn" title="Uploader une photo">
-        📁
-        <input type="file" accept="image/*" style="display:none"
-          onchange="uploadPhotoSlot('${key}', this)"/>
-      </label>
-    </div>`;
-  div._onChange = onChange;
-  return div;
-}
-
-// Stocke les callbacks par key
-const photoCallbacks = {};
-function updatePhotoUrl(key, url) {
-  // Met à jour D selon la clé
-  if (key === 'hero') { D.photos.hero = url; renderPhotoPreview('hero-preview', url); return; }
-  const m = key.match(/^about-(\d)$/);
-  if (m) { D.photos.about[+m[1]] = url; renderPhotoPreviewInSlot(key, url); return; }
-  const m2 = key.match(/^menucat-(\w+)$/);
-  if (m2) { D.photos.menu[m2[1]] = url; renderPhotoPreviewInSlot(key, url); }
-}
-
-function renderPhotoPreview(containerId, url) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  el.innerHTML = url ? `<img src="${esc(url)}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;display:block"/>` : '';
-}
-
-function renderPhotoPreviewInSlot(key, url) {
-  const el = document.getElementById('preview-'+key);
-  if (!el) return;
-  el.innerHTML = url ? `<img src="${esc(url)}" alt=""/>` : '🖼️';
-}
-
-function setPhoto(key, url) { updatePhotoUrl(key, url); }
-
-// UPLOAD
-async function uploadPhotoSlot(key, input) {
-  const file = input.files[0];
-  if (!file) return;
-  const label = input.closest('label');
-  if (label) { label.classList.add('uploading'); label.textContent = '⏳'; }
-  const url = await doUpload(file);
-  if (label) { label.classList.remove('uploading'); label.innerHTML = '📁<input type="file" accept="image/*" style="display:none" onchange="uploadPhotoSlot(\''+key+'\',this)"/>'; }
-  if (url) updatePhotoUrl(key, url);
-}
-
-async function uploadPhoto(key, input) {
-  const file = input.files[0];
-  if (!file) return;
-  showToast('⏳ Upload en cours…');
-  const url = await doUpload(file);
-  if (url) {
-    updatePhotoUrl(key, url);
-    const urlInput = document.getElementById(key+'-url');
-    if (urlInput) urlInput.value = url;
-    showToast('✅ Photo uploadée !');
+  const ag = document.getElementById('about-photos-grid');
+  if (ag) {
+    ag.innerHTML = '';
+    ['Photo 1','Photo 2','Photo 3'].forEach((label, i) => {
+      const url = (D.photos.about||[])[i]||'';
+      const slot = document.createElement('div');
+      slot.className = 'photo-slot';
+      slot.innerHTML = '<div class="mi-label">'+label+'</div>'
+        +'<div class="photo-preview square" id="preview-about-'+i+'">'+(url?'<img src="'+esc(url)+'" alt=""/>':'🖼️')+'</div>'
+        +'<div class="photo-actions">'
+        +'<input type="url" class="photo-url" value="'+esc(url)+'" placeholder="https://…" oninput="updatePhotoUrl(\'about-'+i+'\',this.value)"/>'
+        +'<label class="upload-btn">📁<input type="file" accept="image/*" style="display:none" onchange="uploadPhotoSlot(\'about-'+i+'\',this)"/></label>'
+        +'</div>';
+      ag.appendChild(slot);
+    });
   }
 }
 
+function updatePhotoUrl(key, url) {
+  if (!D.photos) D.photos = {hero:'', about:['','',''], menu:{kebabs:'',burgers:'',tacos:'',sides:''}};
+  if (key==='hero') { D.photos.hero=url; renderPhotoPreview('hero-preview',url); }
+  const m = key.match(/^about-(\d)$/);
+  if (m) { D.photos.about[+m[1]]=url; renderPhotoPreviewInSlot(key,url); }
+  const m2 = key.match(/^menucat-(\w+)$/);
+  if (m2) { D.photos.menu[m2[1]]=url; renderPhotoPreviewInSlot(key,url); }
+  liveUpdate();
+}
+
+function renderPhotoPreview(id, url) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = url ? '<img src="'+esc(url)+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>' : '🖼️';
+}
+function renderPhotoPreviewInSlot(key, url) { renderPhotoPreview('preview-'+key, url); }
+function setPhoto(key, url) { updatePhotoUrl(key, url); }
+
+async function uploadPhotoSlot(key, input) {
+  const file = input.files[0]; if (!file) return;
+  showToast('⏳ Upload…');
+  const url = await doUpload(file);
+  if (url) updatePhotoUrl(key, url);
+}
+async function uploadPhoto(key, input) {
+  const file = input.files[0]; if (!file) return;
+  showToast('⏳ Upload…');
+  const url = await doUpload(file);
+  if (url) { updatePhotoUrl(key, url); const el=document.getElementById(key+'-url'); if(el)el.value=url; showToast('✅ Photo uploadée !'); }
+}
 async function doUpload(file) {
   try {
     const r = await fetch('/api/upload-image', {
-      method: 'POST',
-      headers: {
-        'x-admin-password': adminPassword,
-        'x-filename': file.name,
-        'content-type': file.type,
-      },
-      body: file
+      method:'POST',
+      headers:{'x-admin-password':adminPassword,'x-filename':file.name,'content-type':file.type},
+      body:file
     });
     if (!r.ok) throw new Error();
     const data = await r.json();
     return data.url;
-  } catch(e) {
-    showToast('❌ Erreur upload', true);
-    return null;
-  }
+  } catch(e) { showToast('❌ Erreur upload', true); return null; }
 }
 
-// SAVE
+// ── SAVE ──
 async function saveAll() {
   readForms();
   const btn = document.getElementById('btn-save');
-  btn.disabled=true; btn.className='btn-save saving'; btn.textContent='⏳ Sauvegarde…';
+  btn.disabled=true; btn.className='btn-save saving'; btn.textContent='⏳…';
   try {
     const r = await fetch('/api/save-menu', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({password:adminPassword, siteData:D})
     });
     const data = await r.json();
-    if (!r.ok) throw new Error(data.error || 'Erreur ' + r.status);
-    btn.className='btn-save saved'; btn.textContent='✅ Sauvegardé !';
+    if (!r.ok) throw new Error(data.error||'Erreur '+r.status);
+    btn.className='btn-save saved'; btn.textContent='✅ Sauvegardé';
     showToast('✅ Modifications enregistrées !');
   } catch(e) {
-    console.error('Save error:', e);
-    btn.className='btn-save'; btn.textContent='❌ Erreur — réessayer';
-    showToast('❌ ' + (e.message || 'Erreur réseau'), true);
+    btn.className='btn-save'; btn.textContent='❌ Réessayer';
+    showToast('❌ '+(e.message||'Erreur réseau'), true);
   } finally {
-    setTimeout(() => {
-      btn.disabled=false;
-      btn.className='btn-save';
-      btn.innerHTML='💾 Sauvegarder';
-    }, 3000);
+    setTimeout(() => { btn.disabled=false; btn.className='btn-save'; btn.innerHTML='💾 Sauvegarder'; }, 3000);
   }
 }
 
 function showToast(msg, err=false) {
-  const t = document.getElementById('toast');
-  if (!t) { console.warn('Toast:', msg); return; }
+  const t=document.getElementById('toast');
+  if(!t){console.warn(msg);return;}
   t.textContent=msg; t.className='toast'+(err?' err':'')+' show';
-  setTimeout(() => { if(t) t.className='toast'+(err?' err':''); }, 3200);
+  setTimeout(()=>{if(t)t.className='toast'+(err?' err':'');},3200);
 }
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+// ── LISTEN for iframe ready ──
+window.addEventListener('message', e => {
+  if (e.data && e.data.type === 'IFRAME_READY') {
+    setTimeout(() => {
+      readForms();
+      const iframe = document.getElementById('preview-iframe');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'ADMIN_UPDATE', data: D }, '*');
+      }
+    }, 200);
+  }
+});
 </script>
 </body>
 </html>
