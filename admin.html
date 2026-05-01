@@ -1,233 +1,444 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Espace Gérant — Snack Bosphore</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Espace Gérant</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: #fafaf7; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5f4f0;color:#1a1a1a;font-size:14px}
 
-  /* ── LOGIN ── */
-  #login-screen {
-    position: fixed; inset: 0; background: #0E0E0E;
-    display: flex; align-items: center; justify-content: center; z-index: 9999;
-  }
-  .login-box {
-    background: #1a1a1a; border-radius: 16px; padding: 40px;
-    width: 360px; text-align: center; border: 1px solid rgba(255,255,255,0.08);
-  }
-  .login-box h1 { color: #fff; font-size: 22px; margin: 0 0 6px; }
-  .login-box p { color: rgba(255,255,255,0.45); font-size: 13px; margin: 0 0 28px; }
-  .login-box input {
-    width: 100%; padding: 12px 16px; border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06);
-    color: #fff; font: inherit; font-size: 15px; outline: none; margin-bottom: 12px;
-  }
-  .login-box input:focus { border-color: #E63946; }
-  .login-box button {
-    width: 100%; padding: 13px; border-radius: 10px; border: 0;
-    background: #E63946; color: #fff; font: inherit; font-size: 15px;
-    font-weight: 600; cursor: pointer;
-  }
-  .login-box button:hover { background: #c8313e; }
-  .login-error { color: #E63946; font-size: 13px; margin-top: 10px; display: none; }
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:#0e0e0e;display:flex;align-items:center;justify-content:center;z-index:9999}
+.lbox{background:#1c1c1c;border-radius:18px;padding:44px 40px;width:380px;text-align:center;border:1px solid rgba(255,255,255,.07)}
+.lbox-emoji{font-size:44px;margin-bottom:18px}
+.lbox h1{color:#fff;font-size:22px;font-weight:700;margin-bottom:6px}
+.lbox p{color:rgba(255,255,255,.38);font-size:13px;margin-bottom:30px}
+.lbox input{width:100%;padding:13px 16px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#fff;font:inherit;font-size:15px;outline:none;margin-bottom:12px;transition:border-color .15s}
+.lbox input:focus{border-color:#e63946}
+.lbox button{width:100%;padding:14px;border-radius:10px;border:0;background:#e63946;color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s}
+.lbox button:hover{background:#c8313e}
+.lerr{color:#e63946;font-size:13px;margin-top:12px;display:none}
 
-  /* ── TOPBAR ── */
-  #app { display: none; }
-  .topbar {
-    background: #fff; border-bottom: 1px solid rgba(0,0,0,0.08);
-    padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-  }
-  .topbar-left { display: flex; align-items: center; gap: 12px; }
-  .topbar-logo {
-    width: 36px; height: 36px; background: #E63946; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-weight: 900; font-size: 18px;
-  }
-  .topbar h1 { font-size: 17px; font-weight: 700; margin: 0; }
-  .topbar p { font-size: 12px; color: rgba(0,0,0,0.45); margin: 2px 0 0; }
+/* APP */
+#app{display:none}
 
-  .save-btn {
-    padding: 10px 20px; background: #1a1a1a; color: #fff;
-    border: 0; border-radius: 8px; font: inherit; font-weight: 600;
-    font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;
-    transition: background 0.15s;
-  }
-  .save-btn:hover { background: #333; }
-  .save-btn:disabled { background: #999; cursor: not-allowed; }
-  .save-btn.saving { background: #2e7d32; }
-  .save-btn.saved { background: #388e3c; }
+/* TOPBAR */
+.topbar{background:#fff;border-bottom:1px solid rgba(0,0,0,.08);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.tb-brand{display:flex;align-items:center;gap:12px}
+.tb-logo{width:34px;height:34px;background:#e63946;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:17px}
+.tb-brand h1{font-size:16px;font-weight:700}
+.tb-brand small{display:block;font-size:11px;color:rgba(0,0,0,.4);margin-top:1px}
+.tb-actions{display:flex;gap:10px;align-items:center}
+.btn-ghost{padding:8px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:transparent;color:#555;font:inherit;font-size:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-ghost:hover{background:#f0f0f0}
+.btn-save{padding:10px 20px;border-radius:8px;border:0;background:#1a1a1a;color:#fff;font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .2s}
+.btn-save:hover{background:#333}
+.btn-save:disabled{background:#aaa;cursor:not-allowed}
+.btn-save.saving{background:#1565c0}
+.btn-save.saved{background:#2e7d32}
 
-  /* ── CONTENT ── */
-  .content { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
-  .preview-link {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: #f5f5f5; border-radius: 8px; padding: 10px 16px;
-    font-size: 13px; color: #555; text-decoration: none; margin-bottom: 28px;
-    border: 1px solid rgba(0,0,0,0.08); transition: background 0.15s;
-  }
-  .preview-link:hover { background: #ebebeb; }
+/* TABS */
+.tabs{background:#fff;border-bottom:1px solid rgba(0,0,0,.08);padding:0 28px;display:flex}
+.tab{padding:14px 18px;border:0;background:transparent;font:inherit;font-size:14px;font-weight:500;color:rgba(0,0,0,.45);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.tab:hover{color:#1a1a1a}
+.tab.active{color:#e63946;border-bottom-color:#e63946;font-weight:600}
 
-  /* ── ADMIN PANEL ── */
-  #admin-root { min-height: 400px; }
+/* CONTENT */
+.content{max-width:900px;margin:0 auto;padding:28px 24px}
+
+/* CARD */
+.card{background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,.07);overflow:hidden;margin-bottom:20px}
+.card-head{padding:16px 20px;border-bottom:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:10px}
+.card-icon{width:32px;height:32px;border-radius:8px;background:#fef0f0;display:flex;align-items:center;justify-content:center;font-size:16px}
+.card-head h2{font-size:15px;font-weight:700}
+.card-head small{font-size:12px;color:rgba(0,0,0,.4)}
+.card-body{padding:20px}
+
+/* FIELDS */
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.field-row.full{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:11px;font-weight:600;color:rgba(0,0,0,.45);text-transform:uppercase;letter-spacing:.06em}
+.field input,.field textarea{padding:10px 12px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);font:inherit;font-size:14px;outline:none;transition:border-color .15s;background:#fff;width:100%}
+.field input:focus,.field textarea:focus{border-color:#e63946}
+.field textarea{resize:vertical;min-height:80px;line-height:1.55}
+
+/* HORAIRES */
+.hor-grid{display:flex;flex-direction:column;gap:10px}
+.hor-row{display:grid;grid-template-columns:1fr 110px 110px auto auto;gap:10px;align-items:center}
+.hor-input{padding:9px 10px;border-radius:8px;border:1.5px solid rgba(0,0,0,.1);font:inherit;font-size:13px;outline:none;background:#fff;width:100%;transition:border-color .15s;text-align:center}
+.hor-input:focus{border-color:#e63946}
+.hor-input:disabled{background:#f5f5f5;color:#999}
+.ferme-lbl{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(0,0,0,.5);white-space:nowrap;cursor:pointer}
+.btn-del-row{width:30px;height:30px;border-radius:7px;border:0;background:transparent;color:rgba(0,0,0,.3);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
+.btn-del-row:hover{background:#fee;color:#c00}
+.btn-add{width:100%;padding:11px;border:1.5px dashed rgba(0,0,0,.15);border-radius:10px;background:transparent;color:rgba(0,0,0,.45);font:inherit;font-size:13px;cursor:pointer;margin-top:10px;transition:all .15s}
+.btn-add:hover{border-color:#e63946;color:#e63946;background:#fff8f8}
+
+/* MENU */
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.cat-tab{padding:7px 14px;border-radius:999px;border:1.5px solid rgba(0,0,0,.1);background:transparent;font:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.cat-tab:hover{background:#f5f5f5}
+.cat-tab.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.cat-count{opacity:.5;margin-left:4px}
+.menu-item{background:#fafaf7;border:1px solid rgba(0,0,0,.07);border-radius:10px;padding:14px;margin-bottom:10px}
+.mi-top{display:grid;grid-template-columns:2fr 90px 110px 36px;gap:10px;align-items:start}
+.mi-desc{margin-top:10px}
+.mi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:rgba(0,0,0,.4);margin-bottom:5px}
+.mi-input{width:100%;padding:8px 10px;border-radius:7px;border:1.5px solid rgba(0,0,0,.08);font:inherit;font-size:13px;outline:none;background:#fff;transition:border-color .15s}
+.mi-input:focus{border-color:#e63946}
+.btn-del-item{width:32px;height:32px;border-radius:7px;border:0;background:transparent;color:rgba(0,0,0,.3);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;margin-top:18px}
+.btn-del-item:hover{background:#fee;color:#c00}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1a1a;color:#fff;padding:12px 28px;border-radius:999px;font-size:14px;font-weight:600;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.err{background:#c62828}
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
 <div id="login-screen">
-  <div class="login-box">
-    <div style="font-size:36px;margin-bottom:16px">🥙</div>
+  <div class="lbox">
+    <div class="lbox-emoji">🥙</div>
     <h1>Espace Gérant</h1>
-    <p>Snack Bosphore · Administration</p>
-    <input type="password" id="pwd-input" placeholder="Mot de passe" />
-    <button onclick="tryLogin()">Connexion</button>
-    <div class="login-error" id="login-error">Mot de passe incorrect</div>
+    <p>Connectez-vous pour modifier votre site</p>
+    <input type="password" id="pwd" placeholder="Mot de passe" />
+    <button onclick="tryLogin()">Se connecter</button>
+    <div class="lerr" id="lerr">Mot de passe incorrect</div>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app">
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-logo">S</div>
+    <div class="tb-brand">
+      <div class="tb-logo" id="tb-letter">S</div>
       <div>
         <h1>Espace Gérant</h1>
-        <p>Snack Bosphore</p>
+        <small id="tb-name">Snack Bosphore</small>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:12px">
-      <a href="/" target="_blank" class="preview-link" style="margin:0">
-        👁 Voir le site
-      </a>
-      <button class="save-btn" id="save-btn" onclick="saveMenu()">
-        💾 Sauvegarder
-      </button>
+    <div class="tb-actions">
+      <a href="/" target="_blank" class="btn-ghost">👁 Voir le site</a>
+      <button class="btn-save" id="btn-save" onclick="saveAll()">💾 Sauvegarder</button>
     </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('infos',this)">🏪 Infos générales</button>
+    <button class="tab" onclick="switchTab('horaires',this)">🕐 Horaires</button>
+    <button class="tab" onclick="switchTab('menu',this)">🥙 Menu</button>
   </div>
 
   <div class="content">
-    <a href="/" target="_blank" class="preview-link">
-      🌐 Voir le site public en direct ↗
-    </a>
-    <div id="admin-root"></div>
+
+    <!-- INFOS -->
+    <div id="tab-infos">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🏪</div>
+          <div><h2>Identité</h2><small>Nom et slogan affichés sur le site</small></div>
+        </div>
+        <div class="card-body">
+          <div class="field-row">
+            <div class="field"><label>Nom du snack</label><input id="f-name" type="text" placeholder="Snack Bosphore"/></div>
+            <div class="field"><label>Slogan</label><input id="f-tagline" type="text" placeholder="Le vrai goût, depuis 2008"/></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Titre accueil ligne 1</label><input id="f-hero1" type="text" placeholder="snack"/></div>
+            <div class="field"><label>Titre accueil ligne 2 (couleur)</label><input id="f-hero2" type="text" placeholder="qui fait la diff."/></div>
+          </div>
+          <div class="field-row full">
+            <div class="field"><label>Sous-titre accueil</label><textarea id="f-herosub" rows="2"></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">📍</div>
+          <div><h2>Coordonnées</h2><small>Affichées dans le footer</small></div>
+        </div>
+        <div class="card-body">
+          <div class="field-row">
+            <div class="field"><label>Adresse</label><textarea id="f-address" rows="2" placeholder="12 rue des Halles&#10;75001 Paris"></textarea></div>
+            <div class="field"><label>Téléphone</label><input id="f-phone" type="tel" placeholder="01 23 45 67 89"/></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">📖</div>
+          <div><h2>À propos</h2><small>Histoire du snack</small></div>
+        </div>
+        <div class="card-body">
+          <div class="field-row full">
+            <div class="field"><label>Titre</label><input id="f-about-title" type="text" placeholder="Une recette, une famille, une obsession."/></div>
+          </div>
+          <div class="field-row full">
+            <div class="field"><label>Texte</label><textarea id="f-about-text" rows="4" placeholder="Votre histoire…"></textarea></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HORAIRES -->
+    <div id="tab-horaires" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🕐</div>
+          <div><h2>Horaires d'ouverture</h2><small>Affichés dans le footer du site</small></div>
+        </div>
+        <div class="card-body">
+          <div class="hor-grid" id="hor-grid"></div>
+          <button class="btn-add" onclick="addHoraire()">+ Ajouter une ligne</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENU -->
+    <div id="tab-menu" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🥙</div>
+          <div><h2>Carte</h2><small>Plats, prix et descriptions</small></div>
+        </div>
+        <div class="card-body">
+          <div class="cat-tabs" id="cat-tabs"></div>
+          <div id="menu-items"></div>
+          <button class="btn-add" onclick="addItem()">+ Ajouter un plat</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<div class="toast" id="toast"></div>
 
-<script type="text/babel" src="admin.jsx"></script>
-
-<script type="text/babel">
+<script>
 let adminPassword = '';
-let currentMenu = null;
-let currentCompose = null;
-let adminRoot = null;
+let activeCat = 'kebabs';
+const CAT_LABELS = { kebabs:'🥙 Kebabs', burgers:'🍔 Burgers', tacos:'🌮 Tacos', sides:'🍟 Sides' };
 
-// ── LOGIN ──
+let D = {
+  name:'Snack Bosphore', tagline:'Le vrai goût, depuis 2008',
+  heroTitle1:'snack', heroTitle2:'qui fait la diff.',
+  heroSub:'Viande grillée minute, pain maison cuit sur place, sauces fait-maison. Livraison en 30 min ou à emporter — tu choisis.',
+  aboutTitle:'Une recette, une famille, une obsession.',
+  aboutText:'Depuis 2008, on broche notre viande chaque matin, on pétrit notre pain à la main et on fait nos sauces sur place.',
+  address:'12 rue des Halles\n75001 Paris', phone:'01 23 45 67 89',
+  horaires:[
+    {jour:'Lun – Jeu', ouverture:'11:30', fermeture:'22:30', ferme:false},
+    {jour:'Ven – Sam', ouverture:'11:30', fermeture:'00:00', ferme:false},
+    {jour:'Dim',       ouverture:'12:00', fermeture:'22:00', ferme:false},
+  ],
+  menu:{
+    kebabs:[
+      {id:'k1',name:'Kebab Classique', desc:'Pain pita, viande de veau, salade, tomate, oignon, sauce blanche',price:7.5, tag:'Best-seller'},
+      {id:'k2',name:'Kebab Galette',   desc:'Galette grillée, viande de poulet, crudités, sauce algérienne',   price:8,   tag:'Épicé'},
+      {id:'k3',name:'Kebab Assiette',  desc:'Frites maison, viande, salade, sauces au choix',                  price:11,  tag:'XL'},
+      {id:'k4',name:'Kebab Falafel',   desc:'Pita, falafels maison, houmous, crudités, sauce yaourt',          price:7,   tag:'Végé'},
+    ],
+    burgers:[
+      {id:'b1',name:'Cheese Snack',   desc:'Steak haché, cheddar, oignons confits, sauce maison',              price:8.5, tag:''},
+      {id:'b2',name:'Double Bacon',   desc:'Double steak, bacon grillé, cheddar fondu, salade',                price:10.5,tag:''},
+      {id:'b3',name:'Chicken Crispy', desc:'Poulet pané croustillant, coleslaw, sauce barbecue',               price:9,   tag:''},
+    ],
+    tacos:[
+      {id:'t1',name:'Tacos M',  desc:'1 viande, frites, fromage fondu, sauce', price:7,  tag:''},
+      {id:'t2',name:'Tacos L',  desc:'2 viandes, frites, fromage fondu, sauce',price:9,  tag:''},
+      {id:'t3',name:'Tacos XL', desc:'3 viandes, frites, double fromage, sauce',price:11, tag:''},
+    ],
+    sides:[
+      {id:'s1',name:'Frites maison',   desc:'Coupées sur place, double cuisson',    price:3.5,tag:''},
+      {id:'s2',name:'Nuggets x6',      desc:'Poulet pané, sauce au choix',           price:4.5,tag:''},
+      {id:'s3',name:'Onion rings',     desc:'6 pièces, sauce barbecue',              price:4,  tag:''},
+      {id:'s4',name:'Mozza sticks x4', desc:'Bâtonnets de mozza panés, sauce tomate',price:5, tag:''},
+    ],
+  },
+  compose:[]
+};
+
+// LOGIN
 async function tryLogin() {
-  const pwd = document.getElementById('pwd-input').value;
+  const pwd = document.getElementById('pwd').value.trim();
   if (!pwd) return;
-
-  // Test le mot de passe en essayant de sauvegarder un payload vide
-  const res = await fetch('/api/save-menu', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password: pwd, menu: null, compose: null, checkOnly: true })
-  });
-
-  if (res.status === 401) {
-    document.getElementById('login-error').style.display = 'block';
-    return;
-  }
-
+  try {
+    const r = await fetch('/api/save-menu', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({password:pwd, checkOnly:true})
+    });
+    if (r.status === 401) { document.getElementById('lerr').style.display='block'; return; }
+  } catch(e) { /* dev local, on passe */ }
   adminPassword = pwd;
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  loadAndRender();
+  await loadData();
+}
+document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
+
+// LOAD
+async function loadData() {
+  try {
+    const r = await fetch('/api/get-menu');
+    const data = await r.json();
+    if (data && data.siteData) D = {...D, ...data.siteData};
+    else if (data && data.menu) { D.menu = data.menu; if(data.compose) D.compose = data.compose; }
+  } catch(e) {}
+  fillForms(); renderHoraires(); renderMenuCats(); renderMenuItems();
 }
 
-document.getElementById('pwd-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') tryLogin();
-});
+// FORMS
+function fillForms() {
+  const s = (id, v) => { const el = document.getElementById(id); if(el) el.value = v||''; };
+  s('f-name', D.name); s('f-tagline', D.tagline);
+  s('f-hero1', D.heroTitle1); s('f-hero2', D.heroTitle2);
+  s('f-herosub', D.heroSub); s('f-address', D.address);
+  s('f-phone', D.phone); s('f-about-title', D.aboutTitle);
+  s('f-about-text', D.aboutText);
+  document.getElementById('tb-name').textContent = D.name||'';
+  document.getElementById('tb-letter').textContent = (D.name||'S')[0].toUpperCase();
+}
 
-// ── LOAD MENU ──
-async function loadAndRender() {
-  await new Promise(resolve => {
-    const check = () => window.AdminEditor ? resolve() : setTimeout(check, 30);
-    check();
+function readForms() {
+  const g = id => (document.getElementById(id)||{}).value||'';
+  D.name = g('f-name'); D.tagline = g('f-tagline');
+  D.heroTitle1 = g('f-hero1'); D.heroTitle2 = g('f-hero2');
+  D.heroSub = g('f-herosub'); D.address = g('f-address');
+  D.phone = g('f-phone'); D.aboutTitle = g('f-about-title');
+  D.aboutText = g('f-about-text');
+  document.getElementById('tb-name').textContent = D.name;
+  document.getElementById('tb-letter').textContent = (D.name||'S')[0].toUpperCase();
+}
+
+// HORAIRES
+function renderHoraires() {
+  const grid = document.getElementById('hor-grid');
+  grid.innerHTML = '';
+  D.horaires.forEach((h, i) => {
+    const row = document.createElement('div');
+    row.className = 'hor-row';
+    row.innerHTML = `
+      <input class="hor-input" style="text-align:left" value="${esc(h.jour)}" placeholder="Lun – Ven"
+        oninput="D.horaires[${i}].jour=this.value"/>
+      <input class="hor-input" type="time" value="${h.ouverture}" ${h.ferme?'disabled':''}
+        oninput="D.horaires[${i}].ouverture=this.value"/>
+      <input class="hor-input" type="time" value="${h.fermeture}" ${h.ferme?'disabled':''}
+        oninput="D.horaires[${i}].fermeture=this.value"/>
+      <label class="ferme-lbl">
+        <input type="checkbox" ${h.ferme?'checked':''} onchange="toggleFerme(${i},this.checked)"/> Fermé
+      </label>
+      <button class="btn-del-row" onclick="D.horaires.splice(${i},1);renderHoraires()" title="Supprimer">✕</button>
+    `;
+    grid.appendChild(row);
   });
+}
+function addHoraire() {
+  D.horaires.push({jour:'Nouveau jour', ouverture:'11:00', fermeture:'22:00', ferme:false});
+  renderHoraires();
+}
+function toggleFerme(i, v) { D.horaires[i].ferme = v; renderHoraires(); }
 
-  try {
-    const res = await fetch('/api/get-menu');
-    const data = await res.json();
-    currentMenu = data.menu;
-    currentCompose = data.compose;
-  } catch(e) {
-    console.warn('Impossible de charger le menu');
-  }
-
-  renderAdmin();
+// MENU
+function renderMenuCats() {
+  const tabs = document.getElementById('cat-tabs');
+  tabs.innerHTML = '';
+  Object.keys(CAT_LABELS).forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-tab' + (cat===activeCat?' active':'');
+    btn.innerHTML = `${CAT_LABELS[cat]}<span class="cat-count">· ${(D.menu[cat]||[]).length}</span>`;
+    btn.onclick = () => { activeCat=cat; renderMenuCats(); renderMenuItems(); };
+    tabs.appendChild(btn);
+  });
 }
 
-function renderAdmin() {
-  if (!adminRoot) {
-    adminRoot = ReactDOM.createRoot(document.getElementById('admin-root'));
-  }
+function renderMenuItems() {
+  const c = document.getElementById('menu-items');
+  c.innerHTML = '';
+  (D.menu[activeCat]||[]).forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'menu-item';
+    div.innerHTML = `
+      <div class="mi-top">
+        <div>
+          <div class="mi-label">Nom du plat</div>
+          <input class="mi-input" value="${esc(item.name)}" placeholder="Nom"
+            oninput="D.menu['${activeCat}'][${idx}].name=this.value"/>
+        </div>
+        <div>
+          <div class="mi-label">Prix €</div>
+          <input class="mi-input" type="number" step="0.5" min="0" value="${item.price}"
+            oninput="D.menu['${activeCat}'][${idx}].price=parseFloat(this.value)||0"/>
+        </div>
+        <div>
+          <div class="mi-label">Étiquette</div>
+          <input class="mi-input" value="${esc(item.tag||'')}" placeholder="Épicé, Végé…"
+            oninput="D.menu['${activeCat}'][${idx}].tag=this.value"/>
+        </div>
+        <button class="btn-del-item" onclick="deleteItem('${activeCat}',${idx})" title="Supprimer">🗑</button>
+      </div>
+      <div class="mi-desc">
+        <div class="mi-label">Description</div>
+        <textarea class="mi-input" rows="2"
+          oninput="D.menu['${activeCat}'][${idx}].desc=this.value">${esc(item.desc)}</textarea>
+      </div>`;
+    c.appendChild(div);
+  });
+}
 
-  adminRoot.render(
-    React.createElement(window.AdminEditor, {
-      open: true,
-      onClose: () => {},
-      menu: currentMenu || window.DEFAULT_MENU || {},
-      compose: currentCompose || window.DEFAULT_COMPOSE || [],
-      onMenuChange: (m) => { currentMenu = m; },
-      onComposeChange: (c) => { currentCompose = c; },
-      embedded: true,
-    })
+function addItem() {
+  const id = activeCat[0]+Date.now().toString(36).slice(-4);
+  D.menu[activeCat].push({id, name:'Nouveau plat', desc:'Description…', price:8, tag:''});
+  renderMenuCats(); renderMenuItems();
+}
+function deleteItem(cat, idx) {
+  D.menu[cat].splice(idx,1);
+  renderMenuCats(); renderMenuItems();
+}
+
+// TABS
+function switchTab(tab, btn) {
+  ['infos','horaires','menu'].forEach(t =>
+    document.getElementById('tab-'+t).style.display = t===tab?'block':'none'
   );
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 }
 
-// ── SAVE ──
-async function saveMenu() {
-  const btn = document.getElementById('save-btn');
-  btn.disabled = true;
-  btn.className = 'save-btn saving';
-  btn.textContent = '⏳ Sauvegarde…';
-
+// SAVE
+async function saveAll() {
+  readForms();
+  const btn = document.getElementById('btn-save');
+  btn.disabled=true; btn.className='btn-save saving'; btn.textContent='⏳ Sauvegarde…';
   try {
-    const res = await fetch('/api/save-menu', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        password: adminPassword,
-        menu: currentMenu,
-        compose: currentCompose,
-      })
+    const r = await fetch('/api/save-menu', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({password:adminPassword, siteData:D})
     });
-
-    if (res.ok) {
-      btn.className = 'save-btn saved';
-      btn.textContent = '✅ Sauvegardé !';
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.className = 'save-btn';
-        btn.textContent = '💾 Sauvegarder';
-      }, 2000);
-    } else {
-      throw new Error('Erreur serveur');
-    }
+    if (!r.ok) throw new Error();
+    btn.className='btn-save saved'; btn.textContent='✅ Sauvegardé !';
+    showToast('✅ Modifications enregistrées !');
   } catch(e) {
-    btn.className = 'save-btn';
-    btn.textContent = '❌ Erreur — réessayer';
-    btn.disabled = false;
+    btn.className='btn-save'; btn.textContent='❌ Erreur';
+    showToast('❌ Erreur — réessayer', true);
   }
+  setTimeout(() => { btn.disabled=false; btn.className='btn-save'; btn.innerHTML='💾 Sauvegarder'; }, 2500);
+}
+
+function showToast(msg, err=false) {
+  const t = document.getElementById('toast');
+  t.textContent=msg; t.className='toast'+(err?' err':'')+' show';
+  setTimeout(() => t.className='toast'+(err?' err':''), 3200);
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 </body>
 </html>
-
