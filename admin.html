@@ -430,22 +430,22 @@ document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='En
 
 // ── LOAD ──
 async function loadData() {
+  // Sauvegarde le menu par défaut avant le merge
+  const defaultMenu = JSON.parse(JSON.stringify(D.menu));
+  const defaultLabels = JSON.parse(JSON.stringify(D.catLabels));
+
   try {
     const r = await fetch('/api/get-menu');
     const data = await r.json();
     if (data && typeof data === 'object' && Object.keys(data).length > 0) {
       D = { ...D, ...data };
-      // Ajoute les nouvelles catégories par défaut si elles manquent en base
-      const defaultCats = {
-        kebabs: D.menu.kebabs, burgers: D.menu.burgers,
-        tacos: D.menu.tacos, sides: D.menu.sides, boissons: D.menu.boissons
-      };
-      Object.keys(defaultCats).forEach(cat => {
-        if (!D.menu[cat]) D.menu[cat] = defaultCats[cat] || [];
+      // Merge menu : garde les catégories par défaut si absentes en base
+      if (!D.menu) D.menu = {};
+      Object.keys(defaultMenu).forEach(cat => {
+        if (!D.menu[cat]) D.menu[cat] = defaultMenu[cat];
       });
-      // Ajoute les labels manquants
+      // Merge catLabels
       if (!D.catLabels) D.catLabels = {};
-      const defaultLabels = { kebabs:'🥙 Kebabs', burgers:'🍔 Burgers', tacos:'🌮 Tacos', sides:'🍟 Sides', boissons:'🥤 Boissons' };
       Object.keys(defaultLabels).forEach(k => {
         if (!D.catLabels[k]) D.catLabels[k] = defaultLabels[k];
       });
