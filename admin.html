@@ -202,6 +202,29 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f5
           </div>
         </div>
       </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">📢</div>
+          <div><h2>Bandeau défilant</h2><small>Messages affichés sous le hero</small></div>
+        </div>
+        <div class="card-body">
+          <div id="marquee-list"></div>
+          <button class="btn-add" onclick="addMarqueeItem()">+ Ajouter un message</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">📱</div>
+          <div><h2>Réseaux sociaux</h2><small>Liens affichés dans le footer</small></div>
+        </div>
+        <div class="card-body">
+          <div id="social-list"></div>
+          <button class="btn-add" onclick="addSocialLink()">+ Ajouter un réseau</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- HORAIRES -->
@@ -371,6 +394,12 @@ let D = {
   },
   googlePlaceId: '',
   reviewsTitle: '4.8 sur 320 avis.',
+  marqueeItems: ['🔥 Menu midi à 9,90€', '★ Livraison 30 min ou offerte', '🌶️ Nouveau · Tacos XXL', '🥙 Halal · 100% maison', '🚀 -10% sur ta 1re commande'],
+  socialLinks: [
+    { label: 'IG', url: '' },
+    { label: 'TT', url: '' },
+    { label: 'FB', url: '' },
+  ],
   reviews: [
     {n:'Marwan', d:'@marwan_eats', t:'Le kebab du quartier. Vraiment. Le pain est cuit minute, ça change tout.', s:5, source:'google'},
     {n:'Léa', d:'Cliente régulière', t:'La sauce algérienne maison vaut le détour. Et la livraison en 25 min, top.', s:5, source:'google'},
@@ -423,6 +452,57 @@ function fillForms() {
   document.getElementById('tb-name').textContent = D.name||'';
   document.getElementById('tb-letter').textContent = (D.name||'S')[0].toUpperCase();
   renderBadges();
+  renderMarquee();
+  renderSocial();
+}
+
+// MARQUEE
+function renderMarquee() {
+  if (!D.marqueeItems) D.marqueeItems = [];
+  const list = document.getElementById('marquee-list');
+  if (!list) return;
+  list.innerHTML = '';
+  D.marqueeItems.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px';
+    row.innerHTML = `
+      <input class="mi-input" style="flex:1" value="${esc(item)}" placeholder="Ex: 🔥 Menu midi à 9,90€"
+        oninput="D.marqueeItems[${i}]=this.value"/>
+      <button class="btn-del-row" onclick="D.marqueeItems.splice(${i},1);renderMarquee()" title="Supprimer">✕</button>
+    `;
+    list.appendChild(row);
+  });
+}
+function addMarqueeItem() {
+  if (!D.marqueeItems) D.marqueeItems = [];
+  D.marqueeItems.push('');
+  renderMarquee();
+}
+
+// SOCIAL
+const SOCIAL_ICONS = { IG:'Instagram', TT:'TikTok', FB:'Facebook', YT:'YouTube', TW:'Twitter/X', LN:'LinkedIn' };
+function renderSocial() {
+  if (!D.socialLinks) D.socialLinks = [];
+  const list = document.getElementById('social-list');
+  if (!list) return;
+  list.innerHTML = '';
+  D.socialLinks.forEach((s, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid;grid-template-columns:90px 1fr auto;gap:8px;align-items:center;margin-bottom:8px';
+    row.innerHTML = `
+      <input class="mi-input" value="${esc(s.label||'')}" placeholder="Ex: IG"
+        oninput="D.socialLinks[${i}].label=this.value"/>
+      <input class="mi-input" type="url" value="${esc(s.url||'')}" placeholder="https://instagram.com/..."
+        oninput="D.socialLinks[${i}].url=this.value"/>
+      <button class="btn-del-row" onclick="D.socialLinks.splice(${i},1);renderSocial()" title="Supprimer">✕</button>
+    `;
+    list.appendChild(row);
+  });
+}
+function addSocialLink() {
+  if (!D.socialLinks) D.socialLinks = [];
+  D.socialLinks.push({ label: '', url: '' });
+  renderSocial();
 }
 
 function renderBadges() {
