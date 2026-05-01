@@ -84,9 +84,23 @@ async function loadAndMount() {
   document.getElementById('loading').style.display = 'none';
 
   // Monter le site
-  ReactDOM.createRoot(document.getElementById('root')).render(
-    React.createElement(window.SnackSite, { tweaks: SITE_TWEAKS, mode: 'desktop' })
-  );
+  let root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(React.createElement(window.SnackSite, { tweaks: SITE_TWEAKS, mode: 'desktop' }));
+
+  // Annoncer que l'iframe est prête
+  window.parent.postMessage({ type: 'IFRAME_READY' }, '*');
+
+  // Écouter les mises à jour live depuis l'admin
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'ADMIN_UPDATE') {
+      Object.assign(SITE_TWEAKS, e.data.data);
+      root.render(React.createElement(window.SnackSite, { tweaks: {...SITE_TWEAKS}, mode: 'desktop' }));
+    }
+    if (e.data && e.data.type === 'SCROLL_TO') {
+      const el = document.getElementById(e.data.section);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
 }
 
 loadAndMount();
