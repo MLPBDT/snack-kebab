@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   if (checkOnly) return res.json({ ok: true });
 
   try {
-    // Supporte les deux formats : siteData complet ou menu/compose seul
+    // Sauvegarde directement siteData (sans wrapper { siteData: ... })
     const dataToSave = siteData || { menu, compose };
     await kv.set('snack-data', dataToSave);
     res.json({ ok: true });
