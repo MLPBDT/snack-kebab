@@ -256,7 +256,12 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#f0
             <div class="f"><label>Sous-titre</label><input id="f-compose-sub" type="text" placeholder="5 étapes, ton kebab parfait." oninput="liveUpdate()"/></div>
             <div class="f"><label>Prix de base</label><input id="f-compose-price" type="text" placeholder="7,50 €" oninput="liveUpdate()"/></div>
           </div>
-          <div class="info-box">💡 Les étapes du composer (pain, viande, sauces…) se gèrent dans l'onglet <strong>Menu</strong> de l'ancien admin. Cette section arrive bientôt.</div>
+
+          <div class="sec-label" style="display:flex;justify-content:space-between;align-items:center">
+            <span>🧩 Étapes</span>
+            <button class="btn-add" style="width:auto;padding:4px 10px;margin:0;font-size:11px" onclick="addComposeStep()">+ Étape</button>
+          </div>
+          <div id="compose-steps"></div>
         </div>
 
         <!-- ── À PROPOS ── -->
@@ -529,6 +534,7 @@ function switchTab(tab, btn) {
   // Render dynamic content for each tab
   if (tab === 'hero')     { renderStats(); renderMarquee(); }
   if (tab === 'menu')     { renderCatManager(); renderMenuCats(); renderMenuItems(); }
+  if (tab === 'composer') { renderComposeSteps(); }
   if (tab === 'apropos')  { renderBadges(); renderPhotos(); }
   if (tab === 'avis')     { renderReviews(); }
   if (tab === 'footer')   { renderHoraires(); renderSocial(); }
@@ -579,10 +585,86 @@ function renderAll() {
   renderStats(); renderMarquee(); renderBadges();
   renderHoraires(); renderSocial();
   renderCatManager(); renderMenuCats(); renderMenuItems();
+  renderComposeSteps();
   renderReviews(); renderPhotos();
 }
 
-// ── CATEGORY MANAGER ──
+// ── COMPOSER STEPS ──
+function renderComposeSteps() {
+  const container = document.getElementById('compose-steps');
+  if (!container) return;
+  if (!D.compose || !D.compose.length) {
+    D.compose = [
+      { key:'pain',    label:'Le pain',    options:['Pita','Galette','Pain libanais','Sans pain (assiette)'] },
+      { key:'viande',  label:'La viande',  options:['Veau','Poulet','Mixte','Falafel (végé)'] },
+      { key:'crudites',label:'Les crudités',options:['Salade','Tomate','Oignon','Cornichons','Tout'] },
+      { key:'sauce',   label:'Les sauces (max 2)', options:['Blanche','Algérienne','Samouraï','Barbecue','Harissa','Curry','Andalouse'], multi:2 },
+      { key:'extra',   label:'Suppléments', options:["Cheddar +1€","Bacon +1.5€","Œuf +1€","Frites dedans +1€"], multi:4 },
+    ];
+  }
+  container.innerHTML = '';
+  D.compose.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.style.marginBottom = '10px';
+
+    // Header
+    let html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+      +'<div class="mi-label">Étape '+(i+1)+'</div>'
+      +'<button class="btn-del" onclick="D.compose.splice('+i+',1);renderComposeSteps();liveUpdate()">✕</button>'
+      +'</div>';
+
+    // Label + multi
+    html += '<div style="display:grid;grid-template-columns:1fr 80px;gap:6px;margin-bottom:8px">'
+      +'<div><div class="mi-label">Titre de l\'étape</div>'
+      +'<input class="mi-input" value="'+esc(step.label)+'" placeholder="Ex: Le pain" oninput="D.compose['+i+'].label=this.value;liveUpdate()"/></div>'
+      +'<div><div class="mi-label">Max choix</div>'
+      +'<input class="mi-input" type="number" min="0" max="10" value="'+(step.multi||0)+'" title="0 = choix unique" oninput="D.compose['+i+'].multi=parseInt(this.value)||0;liveUpdate()"/></div>'
+      +'</div>';
+
+    // Options
+    html += '<div class="mi-label" style="margin-bottom:4px">Options</div>';
+    html += '<div id="compose-opts-'+i+'" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px">';
+    (step.options||[]).forEach((opt, oi) => {
+      html += '<div style="display:inline-flex;align-items:center;gap:3px;background:#f0f0f0;border-radius:999px;padding:3px 8px 3px 10px;font-size:11px">'
+        +'<span>'+esc(opt)+'</span>'
+        +'<button onclick="removeComposeOpt('+i+','+oi+')" style="border:0;background:rgba(0,0,0,.12);border-radius:999px;width:14px;height:14px;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0">×</button>'
+        +'</div>';
+    });
+    html += '</div>';
+    html += '<div style="display:flex;gap:5px">'
+      +'<input class="mi-input" id="compose-new-opt-'+i+'" placeholder="+ Nouvelle option" style="flex:1" '
+      +'onkeydown="if(event.key===\'Enter\'){addComposeOpt('+i+',this);event.preventDefault()}"/>'
+      +'<button class="upload-btn" onclick="addComposeOpt('+i+',document.getElementById(\'compose-new-opt-'+i+'\'))">+</button>'
+      +'</div>';
+
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+}
+
+function addComposeStep() {
+  if (!D.compose) D.compose = [];
+  D.compose.push({ key:'step'+Date.now().toString(36).slice(-4), label:'Nouvelle étape', options:[] });
+  renderComposeSteps();
+  liveUpdate();
+}
+
+function addComposeOpt(stepIdx, input) {
+  const val = input.value.trim();
+  if (!val) return;
+  if (!D.compose[stepIdx].options) D.compose[stepIdx].options = [];
+  D.compose[stepIdx].options.push(val);
+  input.value = '';
+  renderComposeSteps();
+  liveUpdate();
+}
+
+function removeComposeOpt(stepIdx, optIdx) {
+  D.compose[stepIdx].options.splice(optIdx, 1);
+  renderComposeSteps();
+  liveUpdate();
+}
 function renderCatManager() {
   const el = document.getElementById('cat-manager');
   if (!el) return;
