@@ -503,8 +503,13 @@ function switchTab(tab, btn) {
     }
   }
 
-  if (tab === 'photos') renderPhotos();
-  if (tab === 'avis') renderReviews();
+  // Render dynamic content for each tab
+  if (tab === 'hero')     { renderStats(); renderMarquee(); }
+  if (tab === 'menu')     { renderMenuCats(); renderMenuItems(); }
+  if (tab === 'apropos')  { renderBadges(); renderPhotos(); }
+  if (tab === 'avis')     { renderReviews(); }
+  if (tab === 'footer')   { renderHoraires(); renderSocial(); }
+  if (tab === 'photos')   { renderPhotos(); }
 }
 
 // ── FILL FORMS ──
@@ -558,6 +563,7 @@ function renderAll() {
   renderStats(); renderMarquee(); renderBadges();
   renderHoraires(); renderSocial();
   renderMenuCats(); renderMenuItems();
+  renderReviews(); renderPhotos();
 }
 
 // ── STATS ──
