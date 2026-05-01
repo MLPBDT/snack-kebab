@@ -437,9 +437,12 @@ async function loadData() {
   try {
     const r = await fetch('/api/get-menu');
     const data = await r.json();
-    if (data && data.siteData) D = {...D, ...data.siteData};
-    else if (data && data.menu) { D.menu = data.menu; if(data.compose) D.compose = data.compose; }
-  } catch(e) {}
+    if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+      // Remplace complètement D par les données sauvegardées
+      // On garde les défauts uniquement pour les clés absentes
+      D = { ...D, ...data };
+    }
+  } catch(e) { console.warn('Chargement échoué, données par défaut'); }
   fillForms(); renderHoraires(); renderMenuCats(); renderMenuItems();
 }
 
