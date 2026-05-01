@@ -70,11 +70,11 @@ async function loadAndMount() {
   try {
     const res = await fetch('/api/get-menu');
     const data = await res.json();
-    if (data.siteData) {
-      Object.assign(SITE_TWEAKS, data.siteData);
-    } else {
-      if (data.menu) SITE_TWEAKS.menu = data.menu;
-      if (data.compose) SITE_TWEAKS.compose = data.compose;
+    // Merge tout — menu, compose, photos, name, etc.
+    if (data && typeof data === 'object') {
+      Object.keys(data).forEach(key => {
+        SITE_TWEAKS[key] = data[key];
+      });
     }
   } catch (e) {
     console.warn('API indisponible, données par défaut utilisées');
