@@ -518,14 +518,22 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))',
             gap: 20,
           }}>
-            {visibleItems.map((it, idx) => (
+            {visibleItems.map((it, idx) => {
+              // Emoji par défaut selon catégorie
+              const CAT_EMOJIS = { kebabs:['🥙','🌯','🍽️','🧆'], burgers:['🍔','🥩','🍗','🌱'], tacos:['🌮','🌮','🌮','🌮'], sides:['🍟','🍗','🧅','🧀'], boissons:['🥤','🍊','💧','🍋'] };
+              const emojis = CAT_EMOJIS[activeCat] || ['🍽️'];
+              const emoji = it.emoji || emojis[idx % emojis.length];
+              return (
               <article key={it.id} className="ks-card">
                 <div style={{ height: 160, position: 'relative', background: palette.bgDeep }}>
                   {it.image
                     ? <img src={it.image} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
                     : t.photos && t.photos.menu && t.photos.menu[activeCat]
                       ? <img src={t.photos.menu[activeCat]} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                      : <KebabArt seed={idx + (it.id.charCodeAt(1) || 0)} palette={palette} />}
+                      : <div style={{position:'relative',width:'100%',height:'100%'}}>
+                          <KebabArt seed={idx + (it.id.charCodeAt(1) || 0)} palette={palette} />
+                          <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:52,filter:'drop-shadow(0 4px 8px rgba(0,0,0,.4))'}}>{emoji}</div>
+                        </div>}
                   {it.tag && (
                     <span className="ks-tag" style={{
                       position: 'absolute', top: 12, left: 12, background: palette.primary, color: palette.onPrimary,
@@ -548,7 +556,7 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
                   </button>
                 </div>
               </article>
-            ))}
+            );})}
           </div>
         </div>
       </section>
