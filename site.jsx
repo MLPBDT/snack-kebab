@@ -519,21 +519,25 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             gap: 20,
           }}>
             {visibleItems.map((it, idx) => {
-              // Emoji par défaut selon catégorie
-              const CAT_EMOJIS = { kebabs:['🥙','🌯','🍽️','🧆'], burgers:['🍔','🥩','🍗','🌱'], tacos:['🌮','🌮','🌮','🌮'], sides:['🍟','🍗','🧅','🧀'], boissons:['🥤','🍊','💧','🍋'] };
-              const emojis = CAT_EMOJIS[activeCat] || ['🍽️'];
-              const emoji = it.emoji || emojis[idx % emojis.length];
+              const CAT_PHOTOS = {
+                kebabs:['https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&q=80','https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&q=80','https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'],
+                burgers:['https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80','https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&q=80','https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600&q=80'],
+                tacos:['https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80','https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=600&q=80','https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=600&q=80'],
+                sides:['https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&q=80','https://images.unsplash.com/photo-1562967914-608f82629710?w=600&q=80','https://images.unsplash.com/photo-1639024471283-03518883512d?w=600&q=80','https://images.unsplash.com/photo-1531749668029-2db88e4276c7?w=600&q=80'],
+                boissons:['https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=600&q=80','https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&q=80','https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600&q=80','https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=600&q=80'],
+              };
+              const photos = CAT_PHOTOS[activeCat] || [];
+              const defaultPhoto = photos[idx % photos.length];
               return (
               <article key={it.id} className="ks-card">
-                <div style={{ height: 160, position: 'relative', background: palette.bgDeep }}>
+                <div style={{ height: 160, position: 'relative', background: palette.bgDeep, overflow: 'hidden' }}>
                   {it.image
                     ? <img src={it.image} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
                     : t.photos && t.photos.menu && t.photos.menu[activeCat]
                       ? <img src={t.photos.menu[activeCat]} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                      : <div style={{position:'relative',width:'100%',height:'100%'}}>
-                          <KebabArt seed={idx + (it.id.charCodeAt(1) || 0)} palette={palette} />
-                          <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:52,filter:'drop-shadow(0 4px 8px rgba(0,0,0,.4))'}}>{emoji}</div>
-                        </div>}
+                      : defaultPhoto
+                        ? <img src={defaultPhoto} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                        : <KebabArt seed={idx + (it.id.charCodeAt(1) || 0)} palette={palette} />}
                   {it.tag && (
                     <span className="ks-tag" style={{
                       position: 'absolute', top: 12, left: 12, background: palette.primary, color: palette.onPrimary,
