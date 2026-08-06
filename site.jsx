@@ -519,25 +519,26 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             gap: 20,
           }}>
             {visibleItems.map((it, idx) => {
-              const CAT_PHOTOS = {
-                kebabs:['https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&q=80','https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&q=80','https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'],
-                burgers:['https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80','https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&q=80','https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600&q=80'],
-                tacos:['https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80','https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=600&q=80','https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=600&q=80'],
-                sides:['https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&q=80','https://images.unsplash.com/photo-1562967914-608f82629710?w=600&q=80','https://images.unsplash.com/photo-1639024471283-03518883512d?w=600&q=80','https://images.unsplash.com/photo-1531749668029-2db88e4276c7?w=600&q=80'],
-                boissons:['https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=600&q=80','https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&q=80','https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600&q=80','https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=600&q=80'],
+              const CAT_EMOJIS = { kebabs:['🥙','🌯','🍽️','🧆'], burgers:['🍔','🥩','🍗','🌱'], tacos:['🌮','🌮','🌮','🌮'], sides:['🍟','🍗','🧅','🧀'], boissons:['🥤','🍊','💧','🍋'] };
+              const CAT_BGS = {
+                kebabs:['linear-gradient(135deg,#e63946,#a01020)','linear-gradient(135deg,#e67e22,#d35400)','linear-gradient(135deg,#2980b9,#1a5276)','linear-gradient(135deg,#27ae60,#1e8449)'],
+                burgers:['linear-gradient(135deg,#e67e22,#ca6f1e)','linear-gradient(135deg,#922b21,#641e16)','linear-gradient(135deg,#d4ac0d,#b7950b)','linear-gradient(135deg,#27ae60,#1e8449)'],
+                tacos:['linear-gradient(135deg,#e63946,#a01020)','linear-gradient(135deg,#e67e22,#d35400)','linear-gradient(135deg,#8e44ad,#6c3483)','linear-gradient(135deg,#e63946,#a01020)'],
+                sides:['linear-gradient(135deg,#f4d03f,#d4ac0d)','linear-gradient(135deg,#e67e22,#ca6f1e)','linear-gradient(135deg,#922b21,#641e16)','linear-gradient(135deg,#f4d03f,#d4ac0d)'],
+                boissons:['linear-gradient(135deg,#e63946,#a01020)','linear-gradient(135deg,#e67e22,#d35400)','linear-gradient(135deg,#2980b9,#1a5276)','linear-gradient(135deg,#f4d03f,#d4ac0d)'],
               };
-              const photos = CAT_PHOTOS[activeCat] || [];
-              const defaultPhoto = photos[idx % photos.length];
+              const emojis = CAT_EMOJIS[activeCat] || ['🍽️'];
+              const bgs = CAT_BGS[activeCat] || [];
+              const emoji = it.emoji || emojis[idx % emojis.length];
+              const bg = bgs[idx % bgs.length] || 'linear-gradient(135deg,#e63946,#a01020)';
               return (
               <article key={it.id} className="ks-card">
-                <div style={{ height: 160, position: 'relative', background: palette.bgDeep, overflow: 'hidden' }}>
+                <div style={{ height: 160, position: 'relative', overflow: 'hidden' }}>
                   {it.image
                     ? <img src={it.image} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
                     : t.photos && t.photos.menu && t.photos.menu[activeCat]
                       ? <img src={t.photos.menu[activeCat]} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                      : defaultPhoto
-                        ? <img src={defaultPhoto} alt={it.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                        : <KebabArt seed={idx + (it.id.charCodeAt(1) || 0)} palette={palette} />}
+                      : <div style={{width:'100%',height:'100%',background:bg,display:'flex',alignItems:'center',justifyContent:'center',fontSize:64,filter:'drop-shadow(0 4px 12px rgba(0,0,0,.3))'}}>{emoji}</div>}
                   {it.tag && (
                     <span className="ks-tag" style={{
                       position: 'absolute', top: 12, left: 12, background: palette.primary, color: palette.onPrimary,
