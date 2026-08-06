@@ -439,7 +439,7 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             <div style={{ width: '70%', aspectRatio: '1', borderRadius: radius.xl, overflow: 'hidden', boxShadow: `0 30px 80px ${palette.text}30`, transform: 'rotate(-3deg)' }}>
               {t.photos && t.photos.hero
                 ? <img src={t.photos.hero} alt="hero" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                : <KebabArt seed={0} palette={palette} />}
+                : <img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=800&q=85" alt="kebab" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>}
             </div>
             {/* Floating tags */}
             <div style={{
@@ -683,17 +683,17 @@ function SnackSite({ tweaks: t, mode = 'desktop' }) {
             <div style={{ gridRow: '1 / 3', borderRadius: radius.lg, overflow: 'hidden', background: palette.primary, position: 'relative' }}>
               {t.photos && t.photos.about && t.photos.about[0]
                 ? <img src={t.photos.about[0]} alt="about" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                : <KebabArt seed={1} palette={palette} />}
+                : <img src="https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=800&q=85" alt="kebab" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>}
             </div>
             <div style={{ borderRadius: radius.lg, overflow: 'hidden', background: palette.accent, position: 'relative' }}>
               {t.photos && t.photos.about && t.photos.about[1]
                 ? <img src={t.photos.about[1]} alt="about" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                : <KebabArt seed={2} palette={palette} />}
+                : <img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=600&q=85" alt="cuisine" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>}
             </div>
             <div style={{ borderRadius: radius.lg, overflow: 'hidden', background: palette.bgDeep, position: 'relative' }}>
               {t.photos && t.photos.about && t.photos.about[2]
                 ? <img src={t.photos.about[2]} alt="about" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                : <KebabArt seed={3} palette={palette} />}
+                : <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=85" alt="restaurant" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>}
             </div>
           </div>
         </div>
